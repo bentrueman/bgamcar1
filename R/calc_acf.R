@@ -15,21 +15,23 @@
 #' @examples
 #'
 #' res <- data.frame(
-#' .draw =  1,
-#' .residual = c(1:9, -1e2),
-#' location = "a"
+#'   .draw = 1,
+#'   .residual = c(1:9, -1e2),
+#'   location = "a"
 #' )
 #' calc_acf(res, gr_vars = c(".draw", "location"))
-
-calc_acf <- function(x, ..., gr_vars = c(".draw", "series"), cen_var = NULL) {
-
+#'
+calc_acf <- function(x,
+                     ...,
+                     gr_vars = c(".draw", "series"),
+                     cen_var = NULL) {
   .residual_lagged <- NULL
   .residual <- NULL
   .draw <- NULL
 
   x <- as.data.table(x)
 
-  if(is.null(cen_var)) {
+  if (is.null(cen_var)) {
     x[,
       .residual_lagged := shift(.residual),
       by = gr_vars

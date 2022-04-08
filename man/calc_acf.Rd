@@ -25,9 +25,10 @@ Calculate residual autocorrelation
 \examples{
 
 res <- data.frame(
-.draw =  1,
-.residual = c(1:9, -1e2),
-location = "a"
+  .draw = 1,
+  .residual = c(1:9, -1e2),
+  location = "a"
 )
 calc_acf(res, gr_vars = c(".draw", "location"))
+
 }
