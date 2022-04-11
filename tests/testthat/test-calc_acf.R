@@ -1,5 +1,10 @@
 
-data_acf1 <- data.frame(
+library("dplyr")
+library("readr")
+library("withr")
+library("tidyr")
+
+data_acf1 <- tibble(
   .draw =  1,
   .residual = c(1:9, -1e2),
   location = "a"
@@ -21,13 +26,14 @@ test_that("calc_acf() doesn't alter input", {
   expect_equal(data_acf1, data_acf_test1)
 })
 
-data_acf2 <- expand.grid(
+data_acf2 <- crossing(
   location = letters[1:2],
   .residual = as.numeric(1:10)
-)
-
-data_acf2$.residual <- ifelse(data_acf2$location == "b", data_acf2$.residual - 100, data_acf2$.residual)
-data_acf2$.draw <- 1
+) %>%
+  mutate(
+    .residual = if_else(location == "b", .residual - 100, .residual),
+    .draw = 1
+  )
 
 data_acf_test2 <- data_acf2
 
@@ -42,15 +48,18 @@ test_that("calc_acf() doesn't alter input", {
 })
 
 
-data_acf3 <- expand.grid(
+data_acf3 <- crossing(
   series = letters[1:3],
   .draw = 1:3,
   .residual = as.numeric(1:10)
-)
-
-set.seed(1245)
-data_acf3$censoring <- sample(c(-1, 1), length(data_acf3$series), replace = TRUE)
-data_acf3$.residual <- ifelse(data_acf3$censoring == -1, -10, data_acf3$.residual)
+) %>%
+  mutate(
+    censoring = withr::with_seed(1245, {
+      sample(c(-1, 1), length(series), replace = TRUE)
+    }
+    ),
+    .residual = if_else(censoring == -1, -10, .residual)
+  )
 
 test_that("Filtering works for calc_acf()", {
   acf3 <- calc_acf(

@@ -20,3 +20,9 @@ autocorrelation structure.
 \description{
 Add the CAR(1) autocorrelation structure.
 }
+\examples{
+data_ar <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_ar.csv"))
+data_ar$`ar[1]` <- .7
+data_ar$.epred <- 0
+add_car1(data_ar, "y", gr_vars = "series")
+}

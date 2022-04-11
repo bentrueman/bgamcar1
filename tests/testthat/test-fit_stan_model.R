@@ -1,0 +1,73 @@
+
+library("brms")
+library("readr")
+
+seed <- 1
+
+data <- read_csv(paste0(system.file("extdata", package = "bgamcar1"), "/data.csv"))
+data_ar <- read_csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_ar.csv"))
+data_car1 <- read_csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_car1.csv"))
+
+form_ar <- bf(y ~ ar(time = date, gr = series), sigma ~ series)
+prior_ar <- prior(normal(0, 1), class = Intercept)
+
+fit <- fit_stan_model(
+  paste0(system.file("extdata", package = "bgamcar1"), "/test"),
+  seed,
+  bf(y | cens(ycens) ~ 1),
+  data,
+  prior(normal(0, 1), class = Intercept),
+  car1 = FALSE,
+  save_warmup = FALSE,
+  chains = 3
+)
+
+fit_ar <- fit_stan_model(
+  paste0(system.file("extdata", package = "bgamcar1"), "/test_ar"),
+  seed,
+  form_ar,
+  data_ar,
+  prior_ar,
+  save_warmup = FALSE,
+  chains = 2
+)
+
+fit_ar2 <- brm(
+  form_ar,
+  data = data_ar,
+  family = student(),
+  seed = seed,
+  chains = 2,
+  file = paste0(system.file("extdata", package = "bgamcar1"), "/test_ar_brm")
+)
+
+form_car1 <- bf(y ~ ar(time = x))
+phi_car1 <- .45
+
+fit_car1 <- fit_stan_model(
+  paste0(system.file("extdata", package = "bgamcar1"), "/test_car1"),
+  seed,
+  form_car1,
+  data_car1,
+  prior_ar,
+  save_warmup = FALSE,
+  chains = 2
+)
+
+test_that("function loads the correct model", {
+
+  expect_equal(class(fit), "brmsfit")
+  expect_equal(as.character(fit$formula)[1], "y | cens(ycens) ~ 1")
+
+})
+
+test_that("fit_stan_model() yields the same results as brms for AR(1) model.", {
+  ar_mod1 <- summary(fit_ar)$cor_pars[,1]
+  ar_mod2 <- summary(fit_ar2)$cor_pars[,1]
+  expect_equal(ar_mod1, ar_mod2, tolerance = 1e-2)
+})
+
+test_that(
+  "fit_stan_model() fits a CAR(1) model that recovers the parameters used to generate the data.", {
+    expect_equal(summary(fit_car1)$cor_pars$Estimate, phi_car1, tolerance = .1)
+  })

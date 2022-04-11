@@ -1,13 +1,28 @@
 
-# generate datasets for tests:
+# generate datasets/models for tests:
 
+library("brms")
 library("withr")
 library("tibble")
 library("dplyr")
 library("tidyr")
 library("readr")
+library("devtools")
+
+load_all()
+
+#------------------ test models ------------------
 
 seed <- 1
+
+# data:
+
+data <- withr::with_seed(seed, {
+  tibble(
+    y = rnorm(10),
+    ycens = "none"
+  )
+})
 
 data_ar <- withr::with_seed(seed, {
   tibble(
@@ -34,4 +49,70 @@ data_ar <- withr::with_seed(seed, {
     ungroup()
 })
 
-write_csv(data_ar, "tests/testthat/data_ar.csv")
+phi_car1 <- .45
+p_ret <- .6 # proportion retained
+
+data_car1 <- withr::with_seed(seed, {
+  tibble(
+    x = 1:200,
+    y = arima.sim(list(ar = phi_car1), length(x))
+  ) %>%
+    slice_sample(prop = p_ret) %>%
+    arrange(x) %>%
+    mutate(
+      x_lag = lag(x),
+      d_x = replace_na(x - x_lag, 0) # spacing of observations
+    )
+})
+
+# fitted models:
+
+fit <- fit_stan_model(
+  "inst/extdata/test",
+  seed,
+  bf(y | cens(ycens) ~ 1),
+  data,
+  prior(normal(0, 1), class = Intercept),
+  car1 = FALSE,
+  save_warmup = FALSE,
+  chains = 3
+)
+
+form_ar <- bf(y ~ ar(time = date, gr = series), sigma ~ series)
+prior_ar <- prior(normal(0, 1), class = Intercept)
+
+fit_ar <- fit_stan_model(
+  "inst/extdata/test_ar",
+  seed,
+  form_ar,
+  data_ar,
+  prior_ar,
+  save_warmup = FALSE,
+  chains = 2
+)
+
+fit_ar2 <- brm(
+  form_ar,
+  data = data_ar,
+  family = student(),
+  seed = seed,
+  chains = 2,
+  file = "inst/extdata/test_ar_brm"
+)
+
+form_car1 <- bf(y ~ ar(time = x))
+
+fit_car1 <- fit_stan_model(
+  "inst/extdata/test_car1",
+  seed,
+  form_car1,
+  data_car1,
+  prior_ar,
+  save_warmup = FALSE,
+  chains = 2
+)
+
+write_csv(data, "inst/extdata/data.csv")
+write_csv(data_ar, "inst/extdata/data_ar.csv")
+write_csv(data_car1, "inst/extdata/data_car1.csv")
+

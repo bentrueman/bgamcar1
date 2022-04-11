@@ -15,6 +15,10 @@
 #' @export
 #'
 #' @examples
+#' data_ar <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_ar.csv"))
+#' data_ar$`ar[1]` <- .7
+#' data_ar$.epred <- 0
+#' add_car1(data_ar, "y", gr_vars = "series")
 add_car1 <- function(x, response, gr_vars = c(".index", "series")) {
 
   r_lag <- NULL

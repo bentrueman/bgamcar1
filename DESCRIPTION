@@ -14,7 +14,11 @@ Imports:
     data.table,
     dplyr,
     readr,
+    rlang,
+    rstan,
+    stringr,
     tibble,
+    tidybayes,
     tidyr,
     withr
 Suggests: 
