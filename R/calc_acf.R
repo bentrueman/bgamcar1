@@ -8,7 +8,7 @@
 #' @param cen_var Name of the censoring variable to be (optionally) lagged.
 #'
 #' @return A `tibble` with a Spearman rank correlation coefficient for each residual draw.
-#' @importFrom data.table as.data.table `:=` shift
+#' @importFrom data.table as.data.table shift `:=`
 #' @importFrom tibble as_tibble
 #' @export
 #'

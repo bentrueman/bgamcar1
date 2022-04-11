@@ -7,11 +7,10 @@
 #'
 #' @return The input dataframe with the fitted values transformed to have the CAR(1)
 #' autocorrelation structure.
-#' @importFrom dplyr ungroup `%>%`
+#' @importFrom dplyr ungroup `%>%` lag
 #' @importFrom data.table as.data.table `:=`
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr replace_na
-#' @importFrom dplyr lag
 #' @export
 #'
 #' @examples

@@ -9,7 +9,6 @@
 #' @importFrom data.table as.data.table `:=`
 #' @importFrom brms rstudent_t
 #' @importFrom dplyr mutate
-#' @importFrom rlang .data
 #' @export
 #'
 #' @examples

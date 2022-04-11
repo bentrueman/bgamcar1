@@ -13,6 +13,11 @@ Imports:
     brms,
     data.table,
     dplyr,
+    ggdist,
+    glue,
+    loo,
+    NADA,
+    purrr,
     readr,
     rlang,
     rstan,
@@ -20,6 +25,7 @@ Imports:
     tibble,
     tidybayes,
     tidyr,
+    tidyselect,
     withr
 Suggests: 
     testthat (>= 3.0.0)
