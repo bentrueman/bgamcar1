@@ -1,4 +1,4 @@
- 
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # bgamcar1
@@ -11,7 +11,7 @@ upcoming journal paper. It comprises a set of functions to fit Bayesian
 generalized additive models with continuous-time first-order
 autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t*
 likelihoods, and left-censoring. The functions are wrappers around or
-alternatives to existing `brms` (Bürkner, 2017, 2018) functions,
+alternatives to existing `brms` functions (Bürkner, 2017, 2018),
 addressing a [current
 gap](https://github.com/paul-buerkner/brms/issues/741) in the models
 `brms` can fit.
@@ -38,9 +38,9 @@ trend with a peak in August, and CAR(1)-filtered Student-*t* errors.
 library("ggplot2")
 library("dplyr")
 library("brms")
-library("devtools")
-load_all()
-# library("bgamcar1")
+library("loo")
+library("ggdist")
+library("bgamcar1")
 theme_set(theme_bw())
 options(mc.cores = parallel::detectCores())
 rseed <- 2356

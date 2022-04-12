@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The bgamcar1 package is intended to document the data analysis for an upcoming journal paper. It comprises a set of functions to fit Bayesian generalized additive models with continuous-time first-order autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t* likelihoods, and left-censoring. The functions are wrappers around or alternatives to existing `brms` (Bürkner, 2017, 2018) functions, addressing a [current gap](https://github.com/paul-buerkner/brms/issues/741) in the models `brms` can fit.
+The bgamcar1 package is intended to document the data analysis for an upcoming journal paper. It comprises a set of functions to fit Bayesian generalized additive models with continuous-time first-order autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t* likelihoods, and left-censoring. The functions are wrappers around or alternatives to existing `brms` functions (Bürkner, 2017, 2018), addressing a [current gap](https://github.com/paul-buerkner/brms/issues/741) in the models `brms` can fit.
 
 ## Installation
 
@@ -40,9 +40,9 @@ Below is a quick demonstration of the main functions. First load the simulated d
 library("ggplot2")
 library("dplyr")
 library("brms")
-library("devtools")
-load_all()
-# library("bgamcar1")
+library("loo")
+library("ggdist")
+library("bgamcar1")
 theme_set(theme_bw())
 options(mc.cores = parallel::detectCores())
 rseed <- 2356
