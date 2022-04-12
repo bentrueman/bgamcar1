@@ -7,6 +7,7 @@
 
 [![Codecov test
 coverage](https://codecov.io/gh/bentrueman/bgamcar1/branch/master/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/bgamcar1?branch=master)
+[![R-CMD-check](https://github.com/bentrueman/bgamcar1/workflows/R-CMD-check/badge.svg)](https://github.com/bentrueman/bgamcar1/actions)
 <!-- badges: end -->
 
 The bgamcar1 package is intended to document the data analysis for an
