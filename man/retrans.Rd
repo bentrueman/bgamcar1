@@ -2,7 +2,7 @@
 % Please edit documentation in R/retrans.R
 \name{retrans}
 \alias{retrans}
-\title{Back-tranform scaled, logged model predictions}
+\title{Back-tranform scaled, (possibly) logged model predictions}
 \usage{
 retrans(x, scale_var, log = TRUE, recensor = FALSE, lcl = 2e-04)
 }
@@ -21,7 +21,7 @@ retrans(x, scale_var, log = TRUE, recensor = FALSE, lcl = 2e-04)
 A vector of back-transformed predictions.
 }
 \description{
-Back-tranform scaled, logged model predictions
+Back-tranform scaled, (possibly) logged model predictions
 }
 \examples{
 x <- rnorm(10, 10)

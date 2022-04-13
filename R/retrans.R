@@ -1,4 +1,4 @@
-#' Back-tranform scaled, logged model predictions
+#' Back-tranform scaled, (possibly) logged model predictions
 #'
 #' @param x A vector.
 #' @param scale_var A vector by which to rescale `x`.
