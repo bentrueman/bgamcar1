@@ -7,9 +7,7 @@ library("tibble")
 library("dplyr")
 library("tidyr")
 library("readr")
-library("devtools")
-
-load_all()
+library("bgamcar1")
 
 #------------------ test models ------------------
 
@@ -19,9 +17,10 @@ seed <- 1
 
 data <- withr::with_seed(seed, {
   tibble(
-    y = rnorm(10),
-    ycens = "none"
-  )
+    y = rnorm(100),
+    ycens = if_else(y <= -1, "left", "none")
+  ) %>%
+    mutate(y = pmax(y, -1))
 })
 
 data_ar <- withr::with_seed(seed, {

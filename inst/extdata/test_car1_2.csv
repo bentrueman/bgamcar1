@@ -20,7 +20,7 @@
 # adapt_t0=10
 # max_treedepth=10
 # sampler_t=NUTS(diag_e)
-# sample_file=R/tests/test_car1_2.csv
+# sample_file=inst/extdata/test_car1_2.csv
 # append_samples=0
 #
 lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,divergent__,energy__,Intercept,ar.1,sigma,nu,b_Intercept
@@ -1029,7 +1029,7 @@ lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,divergent__,energy__,Inte
 -180.835,0.91506,0.744891,2,3,0,181.666,0.096262,0.407591,1.05565,61.3642,0.096262
 -179.968,0.909369,0.744891,3,7,0,183.273,0.171581,0.527381,0.96731,9.944,0.171581
 # 
-#  Elapsed Time: 0.146 seconds (Warm-up)
-#                0.134 seconds (Sampling)
-#                0.28 seconds (Total)
+#  Elapsed Time: 0.191 seconds (Warm-up)
+#                0.136 seconds (Sampling)
+#                0.327 seconds (Total)
 # 

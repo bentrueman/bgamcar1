@@ -46,3 +46,30 @@ test_that("modify_stancode() adds expected number of characters to stan code.", 
   expect_equal(d1, 35) # 35 chars to data block
   expect_equal(d2, 73) # 73 chars overall
 })
+
+test_that("modify_stancode() sets lower bound on priors correctly.", {
+  s1 <- make_stancode(
+    form_ar,
+    data = data_ar
+  )
+  s2 <- make_stancode(
+    form_ar,
+    data = data_ar,
+    prior = prior(normal(0, .5), ar)
+  )
+  s3 <- make_stancode(
+    form_ar,
+    data = data_ar,
+    prior = prior(student_t(0, .5), ar)
+  )
+  s4 <- make_stancode(
+    form_ar,
+    data = data_ar,
+    prior = prior(cauchy(0, .5), ar)
+  )
+  expect_false(str_detect(s1, "normal_lcdf\\(-1 \\|"))
+  expect_true(str_detect(s2, "normal_lcdf\\(-1 \\| 0, 0.5\\)"))
+  expect_true(str_detect(modify_stancode(s2), "normal_lcdf\\(0 \\| 0, 0.5\\)"))
+  expect_true(str_detect(modify_stancode(s3), "student_t_lcdf\\(0 \\| 0, 0.5\\)"))
+  expect_true(str_detect(modify_stancode(s4), "cauchy_lcdf\\(0 \\| 0, 0.5\\)"))
+})
