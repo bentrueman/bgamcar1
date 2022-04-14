@@ -42,12 +42,6 @@ modify_stancode <- function(scode_raw) {
     str_replace(
       "mu\\[n\\] \\+= Err\\[n, 1:Kar\\] \\* ar;",
       "mu[n] += Err[n, 1] * pow(ar[1], s[n]); // CAR(1)"
-    ) %>%
-    # modify prior to reflect 0 lower bound:
-    # (n.b., this works for priors like normal() on the ar param)
-    str_replace(
-      "(target.+\\(ar\\s\\|.+\\\n.+log_diff_exp\\(.+_lcdf\\()(-1)",
-      "\\10"
     )
 
   class(scode) <- "brmsmodel"

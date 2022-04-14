@@ -43,11 +43,11 @@ summarize_preds <- function(x, y_var = lead, retrans = TRUE, ...) {
     .epred = median(.epred),
     .lower = quantile(.epred, .025),
     .upper = quantile(.epred, .975)
-  ), by = grps]
+  ), by = grps] %>%
+    as_tibble()
 
   if(retrans) {
-    x %>%
-      as_tibble() %>%
+    x <- x %>%
       mutate(
         across(
           c(.data$.epred, .data$.lower, .data$.upper),
@@ -55,9 +55,6 @@ summarize_preds <- function(x, y_var = lead, retrans = TRUE, ...) {
           .names = "{.col}_retrans"
         )
       )
-  } else {
-    x %>%
-      as_tibble()
   }
-
+  return(x)
 }

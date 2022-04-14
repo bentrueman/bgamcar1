@@ -47,29 +47,20 @@ test_that("modify_stancode() adds expected number of characters to stan code.", 
   expect_equal(d2, 73) # 73 chars overall
 })
 
-test_that("modify_stancode() sets lower bound on priors correctly.", {
+test_that("modify_stancode() modifies appropriate code snippets.", {
   s1 <- make_stancode(
     form_ar,
     data = data_ar
   )
-  s2 <- make_stancode(
-    form_ar,
-    data = data_ar,
-    prior = prior(normal(0, .5), ar)
-  )
-  s3 <- make_stancode(
-    form_ar,
-    data = data_ar,
-    prior = prior(student_t(0, .5), ar)
-  )
-  s4 <- make_stancode(
-    form_ar,
-    data = data_ar,
-    prior = prior(cauchy(0, .5), ar)
-  )
-  expect_false(str_detect(s1, "normal_lcdf\\(-1 \\|"))
-  expect_true(str_detect(s2, "normal_lcdf\\(-1 \\| 0, 0.5\\)"))
-  expect_true(str_detect(modify_stancode(s2), "normal_lcdf\\(0 \\| 0, 0.5\\)"))
-  expect_true(str_detect(modify_stancode(s3), "student_t_lcdf\\(0 \\| 0, 0.5\\)"))
-  expect_true(str_detect(modify_stancode(s4), "cauchy_lcdf\\(0 \\| 0, 0.5\\)"))
+  s2 <- modify_stancode(s1)
+  r1 <- "response variable\\\n  vector\\[N\\] s;  \\/\\/ CAR\\(1\\) exponent\\\n"
+  r2 <- "vector<lower=0, upper=1>\\[Kar\\] ar;"
+  r3 <- "mu\\[n\\] \\+= Err\\[n, 1\\] \\* pow\\(ar\\[1\\], s\\[n\\]\\); \\/\\/ CAR\\(1\\)"
+  expect_false(str_detect(s1, r1))
+  expect_false(str_detect(s1, r2))
+  expect_false(str_detect(s1, r3))
+  expect_true(str_detect(s2, r1))
+  expect_true(str_detect(s2, r2))
+  expect_true(str_detect(s2, r3))
+
 })

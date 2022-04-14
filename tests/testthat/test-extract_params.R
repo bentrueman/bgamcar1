@@ -20,10 +20,10 @@ fit_ar <- fit_stan_model(
 )
 
 test_that("extract_params() yields expected output.", {
-  fit_ar_pars <- extract_params(fit_ar, draw_ids = 2000)
+  fit_ar_pars <- extract_params(fit_ar, draw_ids = 1200)
   reference <- tibble::tribble(
     ~`ar[1]`, ~.chain, ~.iteration, ~.draw, ~.index,
-    0.748742,      2L,       1000L,  2000L,       1
+    0.745734,      2L,        200L,  1200L,       1
   )
   expect_equal(fit_ar_pars, reference)
 })

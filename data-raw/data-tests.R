@@ -7,7 +7,9 @@ library("tibble")
 library("dplyr")
 library("tidyr")
 library("readr")
-library("bgamcar1")
+# library("bgamcar1")
+library("devtools")
+load_all()
 
 #------------------ test models ------------------
 

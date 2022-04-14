@@ -55,19 +55,17 @@ fit_car1 <- fit_stan_model(
 )
 
 test_that("function loads the correct model", {
-
   expect_equal(class(fit), "brmsfit")
   expect_equal(as.character(fit$formula)[1], "y | cens(ycens) ~ 1")
-
 })
 
 test_that("fit_stan_model() yields the same results as brms for AR(1) model.", {
-  ar_mod1 <- summary(fit_ar)$cor_pars[,1]
-  ar_mod2 <- summary(fit_ar2)$cor_pars[,1]
+  ar_mod1 <- summarise_draws(as_draws_df(fit_ar, "ar[1]"))$median
+  ar_mod2 <- summarise_draws(as_draws_df(fit_ar2, "ar[1]"))$median
   expect_equal(ar_mod1, ar_mod2, tolerance = 1e-2)
 })
 
 test_that(
   "fit_stan_model() fits a CAR(1) model that recovers the parameters used to generate the data.", {
-    expect_equal(summary(fit_car1)$cor_pars$Estimate, phi_car1, tolerance = .1)
+    expect_equal(summarise_draws(as_draws_df(fit_car1, "ar[1]"))$median, phi_car1, tolerance = 5e-2)
   })
