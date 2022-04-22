@@ -69,3 +69,16 @@ test_that(
   "fit_stan_model() fits a CAR(1) model that recovers the parameters used to generate the data.", {
     expect_equal(summarise_draws(as_draws_df(fit_car1, "ar[1]"))$median, phi_car1, tolerance = 5e-2)
   })
+
+test_that("fit_stan_model() calls rstan correctly.", {
+  data <- tibble(y = rnorm(10))
+  testmod <- fit_stan_model(
+    file = NULL,
+    seed = seed,
+    bform = bf(y ~ 1),
+    bdata = data,
+    car1 = FALSE,
+    chains = 1
+  )
+  expect_equal(class(testmod), "brmsfit")
+})
