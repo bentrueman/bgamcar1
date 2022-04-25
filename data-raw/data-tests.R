@@ -1,6 +1,8 @@
 
 # generate datasets/models for tests:
 
+# n.b., a dummy file "badtest_1.csv" has been added to inst/extdata to test that fit_stan_model() ignores it
+
 library("brms")
 library("withr")
 library("tibble")

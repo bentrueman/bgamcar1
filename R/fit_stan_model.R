@@ -44,6 +44,8 @@ fit_stan_model <- function(file,
   regex <- str_extract(file, "[^\\/]+$") %>%
     paste0("_\\d\\.csv")
 
+  regex <- paste0("/", regex)
+
   # generate stan data:
 
   data <- brms::make_standata(
