@@ -65,7 +65,8 @@ test_that("Filtering works for calc_acf()", {
   acf3 <- calc_acf(
     data_acf3,
     censoring == 1 & cens_lagged == 1,
-    cen_var = "censoring"
+    cen_var = "censoring",
+    gr_vars = c(".draw", "series")
   )
   expect_error(calc_acf(data_acf3, cens_lagged = 1))
   expect_equal(acf3$cor, rep(1, 3))

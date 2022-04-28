@@ -4,7 +4,7 @@
 \alias{calc_acf}
 \title{Calculate residual autocorrelation}
 \usage{
-calc_acf(x, ..., gr_vars = c(".draw", "series"), cen_var = NULL)
+calc_acf(x, ..., gr_vars = NULL, cen_var = NULL)
 }
 \arguments{
 \item{x}{A \code{data.frame}}

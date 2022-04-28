@@ -14,8 +14,8 @@ The bgamcar1 package is intended to document the data analysis for an
 upcoming journal paper. It comprises a set of functions to fit Bayesian
 generalized additive models with continuous-time first-order
 autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t*
-likelihoods, and left-censoring. The functions are wrappers around or
-alternatives to existing `brms` functions (Bürkner, 2017, 2018),
+likelihoods, and (possible) censoring. The functions are wrappers around
+or alternatives to existing `brms` functions (Bürkner, 2017, 2018),
 addressing a [current
 gap](https://github.com/paul-buerkner/brms/issues/741) in the models
 `brms` can fit.
@@ -37,6 +37,8 @@ simulated data; all input variables are centered and scaled to unit
 variance (the response was log-transformed before scaling). The
 data-generating process sums a multiyear negative trend, a seasonal
 trend with a peak in August, and CAR(1)-filtered Student-*t* errors.
+Censoring should be indicated using a character vector with the values
+“left”, “right”, “interval”, and “none”.
 
 ``` r
 library("ggplot2")

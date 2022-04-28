@@ -23,7 +23,7 @@
 #'
 calc_acf <- function(x,
                      ...,
-                     gr_vars = c(".draw", "series"),
+                     gr_vars = NULL,
                      cen_var = NULL) {
   .residual_lagged <- NULL
   .residual <- NULL

@@ -18,7 +18,7 @@
 #' fit <- fit_stan_model(
 #'    paste0(system.file("extdata", package = "bgamcar1"), "/test"),
 #'    seed,
-#'    bf(y | cens(ycens) ~ 1),
+#'    bf(y | cens(ycens, y2 = y2) ~ 1),
 #'    data,
 #'    prior(normal(0, 1), class = Intercept),
 #'    car1 = FALSE,
@@ -40,7 +40,7 @@ loo_cv <- function(input, object, censoring = TRUE, ...) {
     as.character()
 
   ll <- add_pred_draws_car1(input, object, ...) %>%
-    calc_ll(varnames$resp, varnames$cens, cens = censoring) %>%
+    calc_ll(varnames$resp, varnames$y2, varnames$cens, cens = censoring) %>%
     dcast(.draw + .chain + .iteration ~ .row, value.var = "log_lik")
 
   ll_mat <- ll[, c(mget(n))] %>%

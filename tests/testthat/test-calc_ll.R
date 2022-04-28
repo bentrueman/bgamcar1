@@ -14,7 +14,7 @@ prior_ar <- prior(normal(0, 1), class = Intercept)
 fit <- fit_stan_model(
   paste0(system.file("extdata", package = "bgamcar1"), "/test"),
   seed,
-  bf(y | cens(ycens) ~ 1),
+  bf(y | cens(ycens, y2 = y2) ~ 1),
   data,
   prior(normal(0, 1), class = Intercept),
   car1 = FALSE,
@@ -38,7 +38,7 @@ ll_brm1 <- brms::log_lik(fit)
 ll_myfn_in1 <- add_pred_draws_car1(data, fit, draw_ids = 1:3000, car1 = FALSE) %>%
   ungroup()
 ll_myfn1 <- ll_myfn_in1 %>%
-  calc_ll("y", censored = "ycens") %>%
+  calc_ll("y", censored = "ycens", upper = "y2") %>%
   pivot_wider(c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) %>%
   select(matches("^\\d")) %>%
   as.matrix()

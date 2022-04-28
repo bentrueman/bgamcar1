@@ -10,7 +10,7 @@ data_ar <- read_csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_
 fit <- fit_stan_model(
   paste0(system.file("extdata", package = "bgamcar1"), "/test"),
   seed,
-  bf(y | cens(ycens) ~ 1),
+  bf(y | cens(ycens, y2 = y2) ~ 1),
   data,
   prior(normal(0, 1), class = Intercept),
   car1 = FALSE,

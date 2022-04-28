@@ -14,7 +14,7 @@ prior_ar <- prior(normal(0, 1), class = Intercept)
 fit <- fit_stan_model(
   paste0(system.file("extdata", package = "bgamcar1"), "/test"),
   seed,
-  bf(y | cens(ycens) ~ 1),
+  bf(y | cens(ycens, y2 = y2) ~ 1),
   data,
   prior(normal(0, 1), class = Intercept),
   car1 = FALSE,
@@ -42,9 +42,9 @@ test_that("extract_resp() extracts the correct model names.", {
     unlist()
   fit_ar_resp <- extract_resp(fit_ar) %>%
     unlist()
-  expect_equal(fit_resp, c(resp = "y", cens = "ycens", gr_sigma = NA))
+  expect_equal(fit_resp, c(resp = "y", cens = "ycens", y2 = "y2", gr_sigma = NA))
   expect_equal(
     fit_ar_resp,
-    c(resp = "y", cens = NA, gr_sigma = "series", gr_ar = "series", time_ar = "date")
+    c(resp = "y", cens = NA, y2 = NA, gr_sigma = "series", gr_ar = "series", time_ar = "date")
   )
 })

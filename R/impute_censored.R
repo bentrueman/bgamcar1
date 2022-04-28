@@ -24,7 +24,7 @@ impute_censored <- function(x, input, yvar, ycens) {
   x <- ungroup(x) %>%
     data.frame()
   x[, yvar] <- if_else(
-    x[, ycens] == "left",
+    x[, ycens] != "none",
     x$.prediction,
     x[, yvar]
   )

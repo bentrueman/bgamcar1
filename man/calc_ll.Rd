@@ -4,16 +4,18 @@
 \alias{calc_ll}
 \title{Calculate the log-likelihood of the posterior predictive distribution}
 \usage{
-calc_ll(x, response, censored = NULL, cens = TRUE)
+calc_ll(x, response, upper = NA, censored = NULL, cens = TRUE)
 }
 \arguments{
 \item{x}{A dataframe of posterior predictions.}
 
 \item{response}{The name of the response variable.}
 
+\item{upper}{For interval censoring, the upper bound (\code{y2} argument to \code{brms::cens()}).}
+
 \item{censored}{The name of the censoring indicator.}
 
-\item{cens}{Logical. Is the response left-censored?}
+\item{cens}{Logical. Is the response censored?}
 }
 \value{
 A matrix of log-likelihoods.
@@ -28,7 +30,7 @@ data <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data.csv
 fit <- fit_stan_model(
    paste0(system.file("extdata", package = "bgamcar1"), "/test"),
    seed,
-   bf(y | cens(ycens) ~ 1),
+   bf(y | cens(ycens, y2 = y2) ~ 1),
    data,
    prior(normal(0, 1), class = Intercept),
    car1 = FALSE,
@@ -36,5 +38,5 @@ fit <- fit_stan_model(
    chains = 3
  )
  ll_in <- add_pred_draws_car1(data, fit, draw_ids = 1:10, car1 = FALSE)
- calc_ll(ll_in, "y", "ycens")
+ calc_ll(ll_in, "y", "y2", "ycens")
 }

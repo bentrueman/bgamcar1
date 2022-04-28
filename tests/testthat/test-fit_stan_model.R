@@ -14,7 +14,7 @@ prior_ar <- prior(normal(0, 1), class = Intercept)
 fit <- fit_stan_model(
   paste0(system.file("extdata", package = "bgamcar1"), "/test"),
   seed,
-  bf(y | cens(ycens) ~ 1),
+  bf(y | cens(ycens, y2 = y2) ~ 1),
   data,
   prior(normal(0, 1), class = Intercept),
   car1 = FALSE,
@@ -56,7 +56,7 @@ fit_car1 <- fit_stan_model(
 
 test_that("function loads the correct model", {
   expect_equal(class(fit), "brmsfit")
-  expect_equal(as.character(fit$formula)[1], "y | cens(ycens) ~ 1")
+  expect_equal(as.character(fit$formula)[1], "y | cens(ycens, y2 = y2) ~ 1")
 })
 
 test_that("fit_stan_model() yields the same results as brms for AR(1) model.", {

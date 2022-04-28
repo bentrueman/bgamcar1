@@ -22,9 +22,22 @@ seed <- 1
 data <- withr::with_seed(seed, {
   tibble(
     y = rnorm(100),
-    ycens = if_else(y <= -1, "left", "none")
+    ycens = case_when(
+      y <= -1 ~ "left",
+      y >= 1 ~ "right",
+      y >= 0 & y <= 0.5 ~ "interval",
+      TRUE ~ "none"
+    )
   ) %>%
-    mutate(y = pmax(y, -1))
+    mutate(
+      y = case_when(
+        ycens == "none" ~ y,
+        ycens == "left" ~ -1,
+        ycens == "right" ~ 1,
+        ycens == "interval" ~ 0,
+      ),
+      y2 = if_else(ycens == "interval", 0.5, y)
+    )
 })
 
 data_ar <- withr::with_seed(seed, {
@@ -73,7 +86,7 @@ data_car1 <- withr::with_seed(seed, {
 fit <- fit_stan_model(
   "inst/extdata/test",
   seed,
-  bf(y | cens(ycens) ~ 1),
+  bf(y | cens(ycens, y2 = y2) ~ 1),
   data,
   prior(normal(0, 1), class = Intercept),
   car1 = FALSE,
