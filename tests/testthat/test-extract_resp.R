@@ -48,3 +48,14 @@ test_that("extract_resp() extracts the correct model names.", {
     c(resp = "y", cens = NA, y2 = NA, gr_sigma = "series", gr_ar = "series", time_ar = "date")
   )
 })
+
+test_that("extract_resp() does not return error in looking for y2", {
+  brmsmod <- brm(
+    bf("y | cens(ycens) ~ 1"),
+    data = mutate(data, ycens = if_else(ycens == "interval", "none", ycens)),
+    empty = TRUE
+  )
+  brmsmod$fit <- fit$fit
+  t1 <- length(extract_resp(brmsmod))
+  expect_equal(t1, 6)
+})

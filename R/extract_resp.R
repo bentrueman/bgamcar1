@@ -36,7 +36,7 @@ extract_resp <- function(x) {
     str_extract("(?<=\\()\\w+")
   # looks for named argument, if NA, looks for unnamed argument after comma:
   y2 <- str_extract(censform, "(?<=y2\\s?\\=\\s?)\\w+")
-  y2 <- ifelse(is.na(y2), str_extract(censform, "(?<=,\\s*)\\w+"), y2)
+  y2 <- ifelse(is.na(y2), str_extract(censform, "(?<=,\\s?)\\w+"), y2)
   gr_sig <- str_extract(as_char[2], "(?<=sigma ~ ).+(?=\\)$)")
   gr_ar <- prep$dpars$mu$ac$acef$gr
   time_ar <- prep$dpars$mu$ac$acef$time
