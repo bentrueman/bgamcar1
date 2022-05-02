@@ -7,6 +7,7 @@
 #' @param bpriors Priors specified by `brms` functions.
 #' @param car1 Logical. Generate CAR(1) errors?
 #' @param sample_prior Passed on to `brms::brm()`.
+#' @param knots Passed on to `brms::brm()`.
 #' @param ... Passed on to `rstan::stan()`.
 #'
 #' @return A `brms` model object fitted with `rstan`.
@@ -37,6 +38,7 @@ fit_stan_model <- function(file,
                            bpriors = NULL,
                            car1 = TRUE,
                            sample_prior = "no",
+                           knots = NULL,
                            ...) {
   path <- str_remove(file, "\\/[^\\/]+$")
   csvfiles <- list.files(path = path, pattern = ".+\\.csv", full.names = TRUE)
@@ -53,7 +55,8 @@ fit_stan_model <- function(file,
     data = bdata,
     prior = bpriors,
     family = student(),
-    sample_prior = sample_prior
+    sample_prior = sample_prior,
+    knots = knots
   )
 
   if (car1) {
@@ -67,7 +70,8 @@ fit_stan_model <- function(file,
     data = bdata,
     prior = bpriors,
     family = student(),
-    sample_prior = sample_prior
+    sample_prior = sample_prior,
+    knots = knots
   )
 
   if (car1) {
@@ -98,6 +102,7 @@ fit_stan_model <- function(file,
     data = bdata,
     prior = bpriors,
     family = student(),
+    knots = knots,
     empty = TRUE
   )
   brmsmod$fit <- stanmod

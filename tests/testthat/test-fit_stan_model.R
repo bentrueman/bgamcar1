@@ -1,6 +1,7 @@
 
 library("brms")
 library("readr")
+library("posterior")
 
 seed <- 1
 

@@ -12,6 +12,7 @@ fit_stan_model(
   bpriors = NULL,
   car1 = TRUE,
   sample_prior = "no",
+  knots = NULL,
   ...
 )
 }
@@ -29,6 +30,8 @@ fit_stan_model(
 \item{car1}{Logical. Generate CAR(1) errors?}
 
 \item{sample_prior}{Passed on to \code{brms::brm()}.}
+
+\item{knots}{Passed on to \code{brms::brm()}.}
 
 \item{...}{Passed on to \code{rstan::stan()}.}
 }
