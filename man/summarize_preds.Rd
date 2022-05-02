@@ -4,7 +4,7 @@
 \alias{summarize_preds}
 \title{Summarize model predictions}
 \usage{
-summarize_preds(x, y_var = lead, retrans = TRUE, ...)
+summarize_preds(x, y_var = lead, retrans = TRUE, pred_var = ".epred", ...)
 }
 \arguments{
 \item{x}{A dataframe of model predictions.}
@@ -12,6 +12,8 @@ summarize_preds(x, y_var = lead, retrans = TRUE, ...)
 \item{y_var}{The untransformed response, used to backtransform predictions.}
 
 \item{retrans}{Logical. Backtransform predictions?}
+
+\item{pred_var}{The column name containing predictions to summarize.}
 
 \item{...}{Arguments passed on to \code{retrans()}.}
 }

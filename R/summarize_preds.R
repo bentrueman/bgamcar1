@@ -3,11 +3,12 @@
 #' @param x A dataframe of model predictions.
 #' @param y_var The untransformed response, used to backtransform predictions.
 #' @param retrans Logical. Backtransform predictions?
+#' @param pred_var The column name containing predictions to summarize.
 #' @param ... Arguments passed on to `retrans()`.
 #'
 #' @return A dataframe containing the summarized predictions.
 #' @importFrom data.table as.data.table
-#' @importFrom dplyr  %>% select mutate
+#' @importFrom dplyr  %>% select mutate rename
 #' @importFrom tibble as_tibble
 #' @importFrom stats median quantile
 #' @export
@@ -28,7 +29,7 @@
 #'  )
 #' preds <- add_pred_draws_car1(data, fit, car1 = FALSE, draw_ids = 1234)
 #' summarize_preds(preds, y_var = y, log = FALSE)
-summarize_preds <- function(x, y_var = lead, retrans = TRUE, ...) {
+summarize_preds <- function(x, y_var = lead, retrans = TRUE, pred_var = ".epred", ...) {
 
   .epred <- NULL
   lead <- NULL
@@ -40,17 +41,18 @@ summarize_preds <- function(x, y_var = lead, retrans = TRUE, ...) {
   x <- as.data.table(x)
 
   x <- x[, list(
-    .epred = median(.epred),
-    .lower = quantile(.epred, .025),
-    .upper = quantile(.epred, .975)
+    .epred = median(get(pred_var)),
+    .lower = quantile(get(pred_var), .025),
+    .upper = quantile(get(pred_var), .975)
   ), by = grps] %>%
     as_tibble()
 
   if(retrans) {
     x <- x %>%
+      rename("{pred_var}" := .epred) %>%
       mutate(
         across(
-          c(.data$.epred, .data$.lower, .data$.upper),
+          c(.data[[pred_var]], .data[[".lower"]], .data[[".upper"]]),
           ~ retrans(.x, {{ y_var }}, ...),
           .names = "{.col}_retrans"
         )
