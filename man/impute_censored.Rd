@@ -4,7 +4,7 @@
 \alias{impute_censored}
 \title{Impute left-censored observations via posterior prediction.}
 \usage{
-impute_censored(x, input, yvar, ycens)
+impute_censored(x, input, yvar, ycens, predvar = ".prediction")
 }
 \arguments{
 \item{x}{A dataframe of observations and posterior predictions.}
@@ -14,6 +14,8 @@ impute_censored(x, input, yvar, ycens)
 \item{yvar}{Name of the column containing left-censored observations.}
 
 \item{ycens}{Name of the column containing the censoring indicator.}
+
+\item{predvar}{Name of prediction column for imputing censored observations.}
 }
 \value{
 A dataframe containing the (possibly imputed) observations.

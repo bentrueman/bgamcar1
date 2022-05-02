@@ -4,6 +4,7 @@
 #' @param input The input dataframe used to generate the model.
 #' @param yvar Name of the column containing left-censored observations.
 #' @param ycens Name of the column containing the censoring indicator.
+#' @param predvar Name of prediction column for imputing censored observations.
 #'
 #' @return A dataframe containing the (possibly imputed) observations.
 #' @importFrom dplyr %>%  ungroup if_else
@@ -20,12 +21,12 @@
 #'    cens = "left"
 #' )
 #' impute_censored(x, x, "y", "cens")
-impute_censored <- function(x, input, yvar, ycens) {
+impute_censored <- function(x, input, yvar, ycens, predvar = ".prediction") {
   x <- ungroup(x) %>%
     data.frame()
   x[, yvar] <- if_else(
     x[, ycens] != "none",
-    x$.prediction,
+    x[, predvar],
     x[, yvar]
   )
   x %>%
