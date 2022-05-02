@@ -45,11 +45,11 @@ summarize_preds <- function(x, y_var = lead, retrans = TRUE, pred_var = ".epred"
     .lower = quantile(get(pred_var), .025),
     .upper = quantile(get(pred_var), .975)
   ), by = grps] %>%
-    as_tibble()
+    as_tibble() %>%
+    rename("{pred_var}" := .epred)
 
   if(retrans) {
     x <- x %>%
-      rename("{pred_var}" := .epred) %>%
       mutate(
         across(
           c(.data[[pred_var]], .data[[".lower"]], .data[[".upper"]]),
