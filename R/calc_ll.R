@@ -5,6 +5,7 @@
 #' @param censored The name of the censoring indicator.
 #' @param cens Logical. Is the response censored?
 #' @param upper For interval censoring, the upper bound (`y2` argument to `brms::cens()`).
+#' Extracted from the model object by `loo_cv()`, but defaults to the response variable if not supplied.
 #'
 #' @return A matrix of log-likelihoods.
 #' @importFrom data.table as.data.table `:=`
@@ -34,6 +35,9 @@ calc_ll <- function(x, response, upper = NA, censored = NULL, cens = TRUE) {
   .epred <- NULL
   sigma <- NULL
   log_lik <- NULL
+  if(is.na(upper)) {
+    upper <- response
+  }
 
   x <- as.data.table(x)
   if (cens) {

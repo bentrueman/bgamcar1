@@ -3,7 +3,7 @@
 #' @param input  A dataframe for which to generate model predictions.
 #' @param object A `brms` model object.
 #' @param type For `type = epred`, draws are from the expectation of the posterior predictive;
-#' for`type = predictions`, draws are from the posterior predictive.
+#' for`type = prediction`, draws are from the posterior predictive.
 #' @param car1 Logical. Add CAR(1) errors?
 #' @param draw_ids Draw IDs from model object.
 #' @param ... Argument passed on to `tidybayes::add_epred_draws()`

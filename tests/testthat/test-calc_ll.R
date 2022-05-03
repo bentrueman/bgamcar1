@@ -67,3 +67,12 @@ test_that("calc_ll() returns the same likelihoods as brms::log_lik()", {
 test_that("calc_ll() doesn't alter input", {
   expect_equal(ll_myfn_in2, ll_myfn_in_test)
 })
+
+test_that("calc_ll() handles missing 'upper' arg when cens=TRUE", {
+  t1 <- ll_myfn_in2 %>%
+    mutate(ycens = "none") %>%
+    calc_ll("y", censored = "ycens") %>%
+    class()
+  expect_type(t1, "character")
+
+})

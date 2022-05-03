@@ -11,7 +11,8 @@ calc_ll(x, response, upper = NA, censored = NULL, cens = TRUE)
 
 \item{response}{The name of the response variable.}
 
-\item{upper}{For interval censoring, the upper bound (\code{y2} argument to \code{brms::cens()}).}
+\item{upper}{For interval censoring, the upper bound (\code{y2} argument to \code{brms::cens()}).
+Extracted from the model object by \code{loo_cv()}, but defaults to the response variable if not supplied.}
 
 \item{censored}{The name of the censoring indicator.}
 

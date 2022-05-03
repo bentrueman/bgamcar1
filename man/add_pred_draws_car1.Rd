@@ -19,7 +19,7 @@ add_pred_draws_car1(
 \item{object}{A \code{brms} model object.}
 
 \item{type}{For \code{type = epred}, draws are from the expectation of the posterior predictive;
-for\code{type = predictions}, draws are from the posterior predictive.}
+for\code{type = prediction}, draws are from the posterior predictive.}
 
 \item{car1}{Logical. Add CAR(1) errors?}
 
