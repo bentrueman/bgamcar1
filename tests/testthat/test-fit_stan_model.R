@@ -33,15 +33,6 @@ fit_ar <- fit_stan_model(
   chains = 2
 )
 
-fit_ar2 <- brm(
-  form_ar,
-  data = data_ar,
-  family = student(),
-  seed = seed,
-  chains = 2,
-  file = paste0(system.file("extdata", package = "bgamcar1"), "/test_ar_brm")
-)
-
 form_car1 <- bf(y ~ ar(time = x))
 phi_car1 <- .45
 
@@ -58,12 +49,6 @@ fit_car1 <- fit_stan_model(
 test_that("function loads the correct model", {
   expect_equal(class(fit), "brmsfit")
   expect_equal(as.character(fit$formula)[1], "y | cens(ycens, y2 = y2) ~ 1")
-})
-
-test_that("fit_stan_model() yields the same results as brms for AR(1) model.", {
-  ar_mod1 <- summarise_draws(as_draws_df(fit_ar, "ar[1]"))$median
-  ar_mod2 <- summarise_draws(as_draws_df(fit_ar2, "ar[1]"))$median
-  expect_equal(ar_mod1, ar_mod2, tolerance = 1e-2)
 })
 
 test_that(

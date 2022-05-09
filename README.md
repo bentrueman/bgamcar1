@@ -10,13 +10,16 @@ coverage](https://codecov.io/gh/bentrueman/bgamcar1/branch/master/graph/badge.sv
 [![R-CMD-check](https://github.com/bentrueman/bgamcar1/workflows/R-CMD-check/badge.svg)](https://github.com/bentrueman/bgamcar1/actions)
 <!-- badges: end -->
 
-The bgamcar1 package is intended to document the data analysis for an
-upcoming journal paper. It comprises a set of functions to fit Bayesian
-generalized additive models with continuous-time first-order
-autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t*
-likelihoods, and (possible) censoring. The functions are wrappers around
-or alternatives to existing `brms` functions (Bürkner, 2017, 2018),
-addressing a [current
+The `bgamcar1` package documents the bespoke functions used in the paper
+“Comparing corrosion control treatments using a robust Bayesian
+generalized additive model”, now available as a
+[preprint](https://doi.org/10.26434/chemrxiv-2022-b3f72) and in a
+separate [repository](https://github.com/bentrueman/compare-cct).
+`bgamcar1` fits Bayesian generalized additive models with
+continuous-time first-order autoregressive (CAR(1), Pinheiro et al.,
+2021) errors, Student *t* likelihoods, and (optional) censoring. The
+functions are wrappers around or alternatives to existing `brms`
+functions (Bürkner, 2017, 2018), addressing a [current
 gap](https://github.com/paul-buerkner/brms/issues/741) in the models
 `brms` can fit.
 
@@ -35,7 +38,7 @@ devtools::install_github("bentrueman/bgamcar1")
 Below is a quick demonstration of the main functions. First load the
 simulated data; all input variables are centered and scaled to unit
 variance (the response was log-transformed before scaling). The
-data-generating process sums a multiyear negative trend, a seasonal
+data-generating process sums a nonlinear multiyear trend, a seasonal
 trend with a peak in August, and CAR(1)-filtered Student-*t* errors.
 Censoring should be indicated using a character vector with the values
 “left”, “right”, “interval”, and “none”.

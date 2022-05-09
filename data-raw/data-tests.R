@@ -10,6 +10,7 @@ library("dplyr")
 library("tidyr")
 library("readr")
 library("bgamcar1")
+library("mgcv")
 # library("devtools")
 # load_all()
 
@@ -81,6 +82,8 @@ data_car1 <- withr::with_seed(seed, {
     )
 })
 
+data_gam <- mgcv::gamSim(1, n = 200, scale = 2)
+
 # fitted models:
 
 fit <- fit_stan_model(
@@ -107,15 +110,6 @@ fit_ar <- fit_stan_model(
   chains = 2
 )
 
-fit_ar2 <- brm(
-  form_ar,
-  data = data_ar,
-  family = student(),
-  seed = seed,
-  chains = 2,
-  file = "inst/extdata/test_ar_brm"
-)
-
 form_car1 <- bf(y ~ ar(time = x))
 
 fit_car1 <- fit_stan_model(
@@ -128,7 +122,18 @@ fit_car1 <- fit_stan_model(
   chains = 2
 )
 
+fit_gam <- fit_stan_model(
+  "inst/extdata/test_gam",
+  seed,
+  bf(y ~ s(x0) + s(x1) + s(x2) + s(x3)),
+  data_gam,
+  save_warmup = FALSE,
+  car1 = FALSE,
+  chains = 2
+)
+
 write_csv(data, "inst/extdata/data.csv")
 write_csv(data_ar, "inst/extdata/data_ar.csv")
 write_csv(data_car1, "inst/extdata/data_car1.csv")
+write_csv(data_gam, "inst/extdata/data_gam.csv")
 
