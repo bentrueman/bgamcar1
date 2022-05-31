@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/bentrueman/bgamcar1/workflows/R-CMD-check/badge.svg)](https://github.com/bentrueman/bgamcar1/actions)
 <!-- badges: end -->
 
-The `bgamcar1` package documents the bespoke functions used in the paper “Comparing corrosion control treatments using a robust Bayesian generalized additive model”, now available as a [preprint](https://doi.org/10.26434/chemrxiv-2022-b3f72) and in a separate [repository](https://github.com/bentrueman/compare-cct). `bgamcar1` fits Bayesian generalized additive models with continuous-time first-order autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t* likelihoods, and (optional) censoring. The functions are wrappers around or alternatives to existing `brms` functions (Bürkner, 2017, 2018), addressing a [current gap](https://github.com/paul-buerkner/brms/issues/741) in the models `brms` can fit.
+The `bgamcar1` package documents the bespoke functions used in the paper “Comparing corrosion control treatments for drinking water using a robust Bayesian generalized additive model”, now available as a [preprint](https://doi.org/10.26434/chemrxiv-2022-b3f72-v3) and in a separate [repository](https://github.com/bentrueman/compare-cct). `bgamcar1` fits Bayesian generalized additive models with continuous-time first-order autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t* likelihoods, and (optional) censoring. The functions are wrappers around or alternatives to existing `brms` functions (Bürkner, 2017, 2018), addressing a [current gap](https://github.com/paul-buerkner/brms/issues/741) in the models `brms` can fit.
 
 ## Installation
 
