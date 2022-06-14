@@ -4,7 +4,7 @@
 \alias{local_slope}
 \title{Calculate the local slope of a smooth term using finite differences}
 \usage{
-local_slope(input, object, x_var, epsilon = 0.001, smooth)
+local_slope(input, object, x_var, epsilon = 0.001, smooth, ...)
 }
 \arguments{
 \item{input}{A dataframe for which to generate model predictions.}
@@ -16,6 +16,8 @@ local_slope(input, object, x_var, epsilon = 0.001, smooth)
 \item{epsilon}{The increment on which to generate differences.}
 
 \item{smooth}{The smooth term for which to calculate local slopes. Passed on to \code{brms::posterior_smooths()}.}
+
+\item{...}{Additional arguments passed to \code{brms::posterior_smooths()}.}
 }
 \value{
 A \code{tibble} containing the (tidy) output of \code{brms::posterior_smooth()} and the calculated slopes.

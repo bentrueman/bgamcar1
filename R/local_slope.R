@@ -6,6 +6,7 @@
 #' @param x_var The predictor associated with the selected smooth term.
 #' @param epsilon The increment on which to generate differences.
 #' @param smooth The smooth term for which to calculate local slopes. Passed on to `brms::posterior_smooths()`.
+#' @param ... Additional arguments passed to `brms::posterior_smooths()`.
 #'
 #' @return A `tibble` containing the (tidy) output of `brms::posterior_smooth()` and the calculated slopes.
 #' @importFrom brms posterior_smooths
@@ -28,7 +29,7 @@
 #'  )
 #' local_slope(data_gam, fit, "x2", smooth = "s(x2)")
 
-local_slope <- function(input, object, x_var, epsilon = .001, smooth) {
+local_slope <- function(input, object, x_var, epsilon = .001, smooth, ...) {
 
   grid_1 <- data.frame(
     seq(
@@ -45,9 +46,9 @@ local_slope <- function(input, object, x_var, epsilon = .001, smooth) {
 
   grid_avg <- (grid_1 + grid_2) / 2
 
-  smooth_1 <- posterior_smooths(object, smooth = smooth, newdata = grid_1)
-  smooth_2 <- posterior_smooths(object, smooth = smooth, newdata = grid_2)
-  smooth_avg <- posterior_smooths(object, smooth = smooth, newdata = grid_avg)
+  smooth_1 <- posterior_smooths(object, smooth = smooth, newdata = grid_1, ...)
+  smooth_2 <- posterior_smooths(object, smooth = smooth, newdata = grid_2, ...)
+  smooth_avg <- posterior_smooths(object, smooth = smooth, newdata = grid_avg, ...)
 
   derivs <- (smooth_2 - smooth_1) / epsilon
 

@@ -8,18 +8,15 @@ Description: This package is intended to document the data analysis for an upcom
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Imports: 
     brms,
     data.table,
     dplyr,
-    ggdist,
     glue,
     loo,
     NADA,
-    posterior,
     purrr,
-    readr,
     rlang,
     rstan,
     stringr,
@@ -30,5 +27,8 @@ Imports:
     withr
 Suggests: 
     covr,
+    ggdist,
+    posterior,
+    readr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

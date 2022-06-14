@@ -169,7 +169,7 @@ test_that(
   "add_pred_draws_car1() fits a CAR(1) model that accounts for the autocorrelation
   structure in an irregularly sampled AR(1).", {
     preds <- add_pred_draws_car1(data_car1, fit_car1, draw_ids = 1:2000) %>%
-      ggdist::median_qi(.epred) %>%
+      median_qi(.epred) %>%
       mutate(r = y - .epred)
     full <- tibble(
       x = seq_len(max(data_car1$x))
