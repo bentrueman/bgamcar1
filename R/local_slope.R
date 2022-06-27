@@ -7,11 +7,12 @@
 #' @param epsilon The increment on which to generate differences.
 #' @param smooth The smooth term for which to calculate local slopes. Passed on to `brms::posterior_smooths()`.
 #' @param ... Additional arguments passed to `brms::posterior_smooths()`.
+#' @param g_var An optional grouping variable for factor-smooth interactions.
 #'
 #' @return A `tibble` containing the (tidy) output of `brms::posterior_smooth()` and the calculated slopes.
 #' @importFrom brms posterior_smooths
-#' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect everything
+#' @importFrom tidyr pivot_longer crossing
+#' @importFrom tidyselect everything starts_with
 #' @importFrom rlang .data
 #' @export
 #'
@@ -29,7 +30,7 @@
 #'  )
 #' local_slope(data_gam, fit, "x2", smooth = "s(x2)")
 
-local_slope <- function(input, object, x_var, epsilon = .001, smooth, ...) {
+local_slope <- function(input, object, x_var, epsilon = .001, smooth, g_var = NULL, ...) {
 
   grid_1 <- data.frame(
     seq(
@@ -41,10 +42,16 @@ local_slope <- function(input, object, x_var, epsilon = .001, smooth, ...) {
 
   names(grid_1) <- x_var
 
-  grid_2 <- grid_1
-  grid_2[, x_var] <- grid_2[, x_var] + epsilon
+  if(!is.null(g_var)) {
+    g <- unique(input[, g_var])
+    grid_1 <- crossing(g, grid_1)
+  }
 
-  grid_avg <- (grid_1 + grid_2) / 2
+  grid_2 <- grid_1
+  grid_avg <- grid_1
+
+  grid_2[, x_var] <- grid_1[, x_var] + epsilon
+  grid_avg[, x_var] <- (grid_1[, x_var] + grid_2[, x_var]) / 2
 
   smooth_1 <- posterior_smooths(object, smooth = smooth, newdata = grid_1, ...)
   smooth_2 <- posterior_smooths(object, smooth = smooth, newdata = grid_2, ...)
@@ -55,11 +62,11 @@ local_slope <- function(input, object, x_var, epsilon = .001, smooth, ...) {
   derivs_df <- as.data.frame(t(derivs))
   smooths_df <- as.data.frame(t(smooth_avg))
 
-  derivs_df[, x_var] <- grid_avg
-  smooths_df[, x_var] <- grid_avg
+  derivs_df <- cbind(grid_avg, derivs_df)
+  smooths_df <- cbind(grid_avg, smooths_df)
 
-  derivs_df <- pivot_longer(derivs_df, -.data[[x_var]], names_to = ".draw", values_to = "slope")
-  smooths_df <- pivot_longer(smooths_df, -.data[[x_var]], names_to = ".draw", values_to = "smooth")
+  derivs_df <- pivot_longer(derivs_df, starts_with("V"), names_to = ".draw", values_to = "slope")
+  smooths_df <- pivot_longer(smooths_df, starts_with("V"), names_to = ".draw", values_to = "smooth")
 
   derivs_df$.draw <- as.numeric(gsub("V", "", derivs_df$.draw))
   derivs_df$smooth <- smooths_df$smooth

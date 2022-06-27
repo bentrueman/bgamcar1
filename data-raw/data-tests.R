@@ -82,7 +82,13 @@ data_car1 <- withr::with_seed(seed, {
     )
 })
 
-data_gam <- mgcv::gamSim(1, n = 200, scale = 2)
+data_gam <- withr::with_seed(seed, mgcv::gamSim(1, n = 200, scale = 2))
+
+data_gam2 <- withr::with_seed(seed, {
+  data_gam %>%
+    slice_sample(prop = 1/3) %>%
+    crossing(g = letters[1:3])
+})
 
 # fitted models:
 
@@ -132,8 +138,19 @@ fit_gam <- fit_stan_model(
   chains = 2
 )
 
+fit_gam2 <- fit_stan_model(
+  "inst/extdata/test_gam2",
+  seed,
+  bf(y ~ s(x0, by = g) + s(x1, by = g) + s(x2, by = g) + s(x3, by = g)),
+  data_gam2,
+  save_warmup = FALSE,
+  car1 = FALSE,
+  chains = 2
+)
+
 write_csv(data, "inst/extdata/data.csv")
 write_csv(data_ar, "inst/extdata/data_ar.csv")
 write_csv(data_car1, "inst/extdata/data_car1.csv")
 write_csv(data_gam, "inst/extdata/data_gam.csv")
+write_csv(data_gam2, "inst/extdata/data_gam2.csv")
 
