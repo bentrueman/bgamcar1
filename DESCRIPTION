@@ -1,5 +1,5 @@
 Package: bgamcar1
-Title: Fit GAMs With CAR(1) Errors To Left-censored Data
+Title: Fit Bayesian GAMs With CAR(1) Errors To Censored Data
 Version: 0.0.0.9000
 Authors@R: 
     person("Benjamin", "Trueman", , "benjamin.trueman@dal.ca", role = c("aut", "cre"),
