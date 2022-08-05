@@ -14,7 +14,7 @@ coverage](https://codecov.io/gh/bentrueman/bgamcar1/branch/master/graph/badge.sv
 The `bgamcar1` package documents the bespoke functions used in the paper
 “Comparing corrosion control treatments for drinking water using a
 robust Bayesian generalized additive model”, now available as a
-[preprint](https://doi.org/10.26434/chemrxiv-2022-b3f72-v3) and in a
+[preprint](https://doi.org/10.26434/chemrxiv-2022-b3f72-v4) and in a
 separate [repository](https://github.com/bentrueman/compare-cct).
 `bgamcar1` fits Bayesian generalized additive models with
 continuous-time first-order autoregressive (CAR(1), Pinheiro et al.,
@@ -45,6 +45,7 @@ Censoring should be indicated using a character vector with the values
 “left”, “right”, “interval”, and “none”.
 
 ``` r
+
 library("ggplot2")
 library("dplyr")
 library("brms")
@@ -60,6 +61,7 @@ simdat <- readr::read_csv("man/models/data-simulated.csv")
 Then fit the model:
 
 ``` r
+
 bform <- bf(
   scaled_lead | cens(cens_lead) ~
   s(scaled_date_numeric, k = 10) +
@@ -77,6 +79,7 @@ fit <- fit_stan_model(
 Generate predictions using `add_pred_draws_car()`…
 
 ``` r
+
 preds_car1 <- add_pred_draws_car1(simdat, fit)
 fitted_car1 <- ggdist::median_qi(preds_car1, .epred)
 ```
@@ -84,6 +87,7 @@ fitted_car1 <- ggdist::median_qi(preds_car1, .epred)
 … and plot the data and the model predictions:
 
 ``` r
+
 fitted_car1 %>%
   mutate(
     across(
@@ -110,6 +114,7 @@ Functions in `brms` that don’t involve the autocorrelation term can
 still be used:
 
 ``` r
+
 brms::conditional_smooths(fit) %>%
   plot(ask = FALSE, newpage = FALSE, plot = FALSE) %>%
   patchwork::wrap_plots()
@@ -121,6 +126,7 @@ Do a quick posterior predictive check. This is based on the function
 `cenfit()` from the `NADA` package (Lopaka, 2020).
 
 ``` r
+
 ppc <- ppc_km_nada(simdat, fit, seed = rseed)
 
 ppc %>%
@@ -138,6 +144,7 @@ cross-validation, using `loo_cv()`, a wrapper around `loo::loo()`
 (Vehtari & Gabry, 2017).
 
 ``` r
+
 loo_car1 <- loo_cv(simdat, fit, draw_ids = 1:8000)
 loo_gam <- loo_cv(simdat, fit, car1 = FALSE, draw_ids = 1:8000)
 
