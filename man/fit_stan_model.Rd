@@ -13,6 +13,7 @@ fit_stan_model(
   car1 = TRUE,
   sample_prior = "no",
   knots = NULL,
+  d_x = NULL,
   ...
 )
 }
@@ -33,6 +34,9 @@ fit_stan_model(
 
 \item{knots}{Passed on to \code{brms::brm()}.}
 
+\item{d_x}{A vector representing the spacing in time of observations in each series,
+equal to zero at the first timestep. If \code{NULL} (the default), \code{d_x} is drawn from the dataframe \code{bdata}.}
+
 \item{...}{Passed on to \code{rstan::stan()}.}
 }
 \value{
@@ -46,13 +50,13 @@ library("brms")
 seed <- 1
 data <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data.csv"))
 fit <- fit_stan_model(
-   paste0(system.file("extdata", package = "bgamcar1"), "/test"),
-   seed,
-   bf(y | cens(ycens, y2 = y2) ~ 1),
-   data,
-   prior(normal(0, 1), class = Intercept),
-   car1 = FALSE,
-   save_warmup = FALSE,
-   chains = 3
- )
+  paste0(system.file("extdata", package = "bgamcar1"), "/test"),
+  seed,
+  bf(y | cens(ycens, y2 = y2) ~ 1),
+  data,
+  prior(normal(0, 1), class = Intercept),
+  car1 = FALSE,
+  save_warmup = FALSE,
+  chains = 3
+)
 }

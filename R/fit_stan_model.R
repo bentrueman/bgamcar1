@@ -8,6 +8,8 @@
 #' @param car1 Logical. Generate CAR(1) errors?
 #' @param sample_prior Passed on to `brms::brm()`.
 #' @param knots Passed on to `brms::brm()`.
+#' @param d_x A vector representing the spacing in time of observations in each series,
+#' equal to zero at the first timestep. If `NULL` (the default), `d_x` is drawn from the dataframe `bdata`.
 #' @param ... Passed on to `rstan::stan()`.
 #'
 #' @return A `brms` model object fitted with `rstan`.
@@ -22,15 +24,15 @@
 #' seed <- 1
 #' data <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data.csv"))
 #' fit <- fit_stan_model(
-#'    paste0(system.file("extdata", package = "bgamcar1"), "/test"),
-#'    seed,
-#'    bf(y | cens(ycens, y2 = y2) ~ 1),
-#'    data,
-#'    prior(normal(0, 1), class = Intercept),
-#'    car1 = FALSE,
-#'    save_warmup = FALSE,
-#'    chains = 3
-#'  )
+#'   paste0(system.file("extdata", package = "bgamcar1"), "/test"),
+#'   seed,
+#'   bf(y | cens(ycens, y2 = y2) ~ 1),
+#'   data,
+#'   prior(normal(0, 1), class = Intercept),
+#'   car1 = FALSE,
+#'   save_warmup = FALSE,
+#'   chains = 3
+#' )
 fit_stan_model <- function(file,
                            seed,
                            bform,
@@ -39,6 +41,7 @@ fit_stan_model <- function(file,
                            car1 = TRUE,
                            sample_prior = "no",
                            knots = NULL,
+                           d_x = NULL,
                            ...) {
   path <- str_remove(file, "\\/[^\\/]+$")
   csvfiles <- list.files(path = path, pattern = ".+\\.csv", full.names = TRUE)
@@ -60,7 +63,15 @@ fit_stan_model <- function(file,
   )
 
   if (car1) {
-    data$s <- bdata$d_x
+    if (is.null(d_x)) {
+      if (is.null(bdata$d_x)) {
+        stop("Column d_x not found in data.")
+      } else {
+        data$s <- bdata$d_x
+      }
+    } else {
+      data$s <- d_x
+    }
   }
 
   # generate stan code:

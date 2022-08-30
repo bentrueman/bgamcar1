@@ -68,3 +68,40 @@ test_that("fit_stan_model() calls rstan correctly.", {
   )
   expect_equal(class(testmod), "brmsfit")
 })
+
+test_that("fit_stan_model() returns an error if d_x argument is missing", {
+  data_car1$d_x <- NULL
+  # d_x missing:
+  expect_error(
+    suppressWarnings(
+      fit_stan_model(
+        paste0(system.file("extdata", package = "bgamcar1"), "/test_car1"),
+        seed,
+        form_car1,
+        data_car1,
+        prior_ar,
+        save_warmup = FALSE,
+        chains = 2
+      )
+    )
+  )
+})
+
+test_that("fit_stan_model() returns an error if d_x argument is missing", {
+  s <- data_car1$d_x
+  data_car1$d_x <- NULL
+  # d_x as an argument:
+  fit_car1_d_x <- fit_stan_model(
+    paste0(system.file("extdata", package = "bgamcar1"), "/test_car1"),
+    seed,
+    form_car1,
+    data_car1,
+    prior_ar,
+    save_warmup = FALSE,
+    chains = 2,
+    d_x = s
+  )
+  expect_equal(summarise_draws(as_draws_df(fit_car1_d_x, "ar[1]"))$median, phi_car1, tolerance = 5e-2)
+})
+
+
