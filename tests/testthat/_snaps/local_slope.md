@@ -17,7 +17,6 @@
        9 0.00234     9 -15.1  -4.74
       10 0.00234    10 -24.6  -3.06
       # ... with 995,990 more rows
-      # i Use `print(n = ...)` to see more rows
 
 # local_slope() returns expected values for factor-smooth interaction
 
@@ -38,5 +37,4 @@
        9 a     0.0774     9 75.6  -6.38  
       10 a     0.0774    10  9.15  1.07  
       # ... with 2,753,990 more rows
-      # i Use `print(n = ...)` to see more rows
 
