@@ -53,15 +53,19 @@ local_slope <- function(input, object, x_var, epsilon = .001, smooth, g_var = NU
   grid_2[, x_var] <- grid_1[, x_var] + epsilon
   grid_avg[, x_var] <- (grid_1[, x_var] + grid_2[, x_var]) / 2
 
-  if (is.null(g_var)) {
-    smooth_1 <- posterior_smooths(object, smooth = smooth, newdata = grid_1, ...)
-    smooth_2 <- posterior_smooths(object, smooth = smooth, newdata = grid_2, ...)
-    smooth_avg <- posterior_smooths(object, smooth = smooth, newdata = grid_avg, ...)
-  } else {
-    smooth_1 <- map_post_smooth(grid_1, object, smooth, g_var, ...)
-    smooth_2 <- map_post_smooth(grid_2, object, smooth, g_var, ...)
-    smooth_avg <- map_post_smooth(grid_avg, object, smooth, g_var, ...)
-  }
+  # if (is.null(g_var)) {
+  #   smooth_1 <- posterior_smooths(object, smooth = smooth, newdata = grid_1, ...)
+  #   smooth_2 <- posterior_smooths(object, smooth = smooth, newdata = grid_2, ...)
+  #   smooth_avg <- posterior_smooths(object, smooth = smooth, newdata = grid_avg, ...)
+  # } else {
+  #   smooth_1 <- map_post_smooth(grid_1, object, smooth, g_var, ...)
+  #   smooth_2 <- map_post_smooth(grid_2, object, smooth, g_var, ...)
+  #   smooth_avg <- map_post_smooth(grid_avg, object, smooth, g_var, ...)
+  # }
+
+  smooth_1 <- posterior_smooths(object, smooth = smooth, newdata = grid_1, ...)
+  smooth_2 <- posterior_smooths(object, smooth = smooth, newdata = grid_2, ...)
+  smooth_avg <- posterior_smooths(object, smooth = smooth, newdata = grid_avg, ...)
 
   derivs <- (smooth_2 - smooth_1) / epsilon
 

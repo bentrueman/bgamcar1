@@ -41,5 +41,12 @@ test_that("unexported function map_post_smooth() returns expected values for fac
   expect_snapshot(smooths)
 })
 
+test_that("unexported function map_post_smooth() matches brms::posterior_smooths()", {
+  smooths2 <- posterior_smooths(fit2, smooth = "s(x2, by = g)", newdata = data_gam2)
+  expect_equal(smooths, smooths2)
+})
+
+
+
 
 
