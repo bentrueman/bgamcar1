@@ -27,6 +27,7 @@ fit2 <- fit_stan_model(
 
 slopes <- local_slope(data_gam, fit, "x2", smooth = "s(x2)")
 slopes2 <- local_slope(data_gam2, fit2, "x2", smooth = "s(x2, by = g)", g_var = "g")
+smooths <- map_post_smooth(data_gam2, object = fit2, smooth = "s(x2, by = g)", g_var = "g")
 
 test_that("local_slope() returns expected values", {
   expect_snapshot(slopes)
@@ -35,5 +36,10 @@ test_that("local_slope() returns expected values", {
 test_that("local_slope() returns expected values for factor-smooth interaction", {
   expect_snapshot(slopes2)
 })
+
+test_that("unexported function map_post_smooth() returns expected values for factor-smooth interaction", {
+  expect_snapshot(smooths)
+})
+
 
 
