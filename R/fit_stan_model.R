@@ -2,7 +2,8 @@
 #'
 #' @param file Load/save csvs to this filepath and name.
 #' @param seed Random seed passed to `rstan::stan()`.
-#' @param bform A `brms` formula/
+#' @param bform A `brms` formula. N.B., transformations of variables within the formula may not be picked up by
+#' post-processing functions; it's generally better to create new, transformed variables.
 #' @param bdata A data frame used to fit the model.
 #' @param bpriors Priors specified by `brms` functions.
 #' @param car1 Logical. Generate CAR(1) errors?
