@@ -4,7 +4,16 @@
 \alias{local_slope}
 \title{Calculate the local slope of a smooth term using finite differences}
 \usage{
-local_slope(input, object, x_var, epsilon = 0.001, smooth, g_var = NULL, ...)
+local_slope(
+  input,
+  object,
+  x_var,
+  epsilon = 0.001,
+  smooth,
+  g_var = NULL,
+  add_vars = NULL,
+  ...
+)
 }
 \arguments{
 \item{input}{A dataframe for which to generate model predictions.}
@@ -19,6 +28,10 @@ local_slope(input, object, x_var, epsilon = 0.001, smooth, g_var = NULL, ...)
 
 \item{g_var}{An optional grouping variable for factor-smooth interactions.}
 
+\item{add_vars}{A named list containing variables to add as columns to the dataframe passed to \code{brms::posterior_smooths()} as \code{newdata}.
+Useful when the smooth specified by \code{smooth} does not include the variables used to construct the CAR(1) term
+(causing an error in \code{posterior_smooths()}).}
+
 \item{...}{Additional arguments passed to \code{brms::posterior_smooths()}.}
 }
 \value{
@@ -32,12 +45,13 @@ library("brms")
 seed <- 1
 data_gam <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_gam.csv"))
 fit <- fit_stan_model(
-   paste0(system.file("extdata", package = "bgamcar1"), "/test_gam"),
-   seed,
-   bf(y ~ s(x0) + s(x1) + s(x2) + s(x3)),
-   data_gam,
-   car1 = FALSE,
-   chains = 2
- )
+  paste0(system.file("extdata", package = "bgamcar1"), "/test_gam"),
+  seed,
+  bf(y ~ s(x0) + s(x1) + s(x2) + s(x3)),
+  data_gam,
+  car1 = FALSE,
+  chains = 2
+)
 local_slope(data_gam, fit, "x2", smooth = "s(x2)")
+
 }
