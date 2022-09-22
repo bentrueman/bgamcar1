@@ -1,7 +1,7 @@
 # local_slope() returns expected values
 
     Code
-      slopes
+      slp$slopes
     Output
       # A tibble: 996,000 x 4
               x2 .draw slope smooth
@@ -18,10 +18,10 @@
       10 0.00234    10 -24.6  -3.06
       # ... with 995,990 more rows
 
-# local_slope() returns expected values for factor-smooth interaction
+---
 
     Code
-      slopes2
+      slp$slopes2
     Output
       # A tibble: 2,754,000 x 5
          g         x2 .draw slope  smooth

@@ -22,7 +22,8 @@ fit_stan_model(
 
 \item{seed}{Random seed passed to \code{rstan::stan()}.}
 
-\item{bform}{A \code{brms} formula/}
+\item{bform}{A \code{brms} formula. N.B., transformations of variables within the formula may not be picked up by
+post-processing functions; it's generally better to create new, transformed variables.}
 
 \item{bdata}{A data frame used to fit the model.}
 
