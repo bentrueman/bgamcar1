@@ -14,7 +14,7 @@ coverage](https://codecov.io/gh/bentrueman/bgamcar1/branch/master/graph/badge.sv
 The `bgamcar1` package documents the bespoke functions used in the paper
 “Comparing corrosion control treatments for drinking water using a
 robust Bayesian generalized additive model”, now available as a
-[preprint](https://doi.org/10.26434/chemrxiv-2022-b3f72-v4) and in a
+[preprint](https://doi.org/10.26434/chemrxiv-2022-b3f72-v5) and in a
 separate [repository](https://github.com/bentrueman/compare-cct).
 `bgamcar1` fits Bayesian generalized additive models with
 continuous-time first-order autoregressive (CAR(1), Pinheiro et al.,
@@ -80,7 +80,7 @@ Generate predictions using `add_pred_draws_car()`…
 
 ``` r
 
-preds_car1 <- add_pred_draws_car1(simdat, fit)
+preds_car1 <- add_pred_draws_car1(simdat, fit, draw_ids = 1:8000)
 fitted_car1 <- ggdist::median_qi(preds_car1, .epred)
 ```
 
