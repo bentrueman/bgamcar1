@@ -9,12 +9,12 @@ test_that("retrans() works as expected.", {
   x_retrans_recens <- retrans(x_trans, x, log = FALSE, recensor = TRUE, lcl = 9)
   x_reltrans <- retrans(x_ltrans, x)
   # in a dataframe:
-  data <- tibble(
+  data <- tibble::tibble(
     orig = x,
     trans = x_trans,
     ltrans = x_ltrans
   ) %>%
-    mutate(
+    dplyr::mutate(
       re_trans = retrans(trans, orig, log = FALSE),
       re_ltrans = retrans(ltrans, orig),
     )

@@ -28,9 +28,9 @@ local_slope(
 
 \item{g_var}{An optional grouping variable for factor-smooth interactions.}
 
-\item{add_vars}{A named list containing variables to add as columns to the dataframe passed to \code{brms::posterior_smooths()} as \code{newdata}.
-Useful when the smooth specified by \code{smooth} does not include the variables used to construct the CAR(1) term
-(causing an error in \code{posterior_smooths()}).}
+\item{add_vars}{brms::posterior_smooths() requires that all variables used in
+constructing the autocorrelation term are also included in newdata arg... even if they are not used in the smooth.
+Add them here as a named list of new columns; if they don't appear in the smooth, they won't contribute to the output.}
 
 \item{...}{Additional arguments passed to \code{brms::posterior_smooths()}.}
 }

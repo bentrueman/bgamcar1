@@ -9,7 +9,7 @@
 #' @param ... Additional arguments passed to `brms::posterior_smooths()`.
 #' @param g_var An optional grouping variable for factor-smooth interactions.
 #' @param add_vars brms::posterior_smooths() requires that all variables used in
-# constructing the autocorrelation term are also included in newdata arg... even if they are not used in the smooth.
+#' constructing the autocorrelation term are also included in newdata arg... even if they are not used in the smooth.
 #' Add them here as a named list of new columns; if they don't appear in the smooth, they won't contribute to the output.
 #'
 #' @return A `tibble` containing the (tidy) output of `brms::posterior_smooth()` and the calculated slopes.
