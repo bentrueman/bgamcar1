@@ -120,3 +120,12 @@ test_that(
     expect_equal(full$ar1, estimates, tolerance = .1)
   })
 
+test_that("add_pred_draws_car1() handles a missing response variable in the input (intentionally or not).", {
+  inputs <- load_test_models()
+  inputs_mod <- inputs$data_ar[, c("date", "series", "d_x")]
+  expect_message(
+    add_pred_draws_car1(inputs_mod, inputs$fit_ar, draw_ids = 1:2000),
+    regexp = "not found in input. Setting car1 = FALSE."
+  )
+})
+

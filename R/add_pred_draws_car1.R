@@ -41,12 +41,21 @@ add_pred_draws_car1 <- function(input,
                                 ...) {
   if (!type %in% c("epred", "prediction")) stop("'type' must be either 'prediction' or 'epred'")
 
-  data_vars <- glue::glue("^{names(input)}$") %>% # group output by columns in "data"
+  inputnames <- names(input)
+
+  data_vars <- glue::glue("^{inputnames}$") %>% # group output by columns in "data"
     paste(collapse = "|")
 
   # extract variables from model object:
 
   varnames <- extract_resp(object) # responses, etc ...
+
+  resp_present <- varnames$resp %in% inputnames
+
+  if (!resp_present) {
+    car1 <- FALSE
+    message(glue::glue("{varnames$resp} not found in input. Setting car1 = FALSE."))
+  }
 
   params <- extract_params(object, car1, draw_ids)
 
