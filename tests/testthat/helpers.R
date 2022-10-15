@@ -398,11 +398,15 @@ help_calc_ll <- function(inputs) {
 # test-local_slope.R
 
 help_local_slope <- function(inputs) {
-  slopes <- local_slope(inputs$data_gam, inputs$fit_gam, "x2", smooth = "s(x2)")
-  slopes2 <- local_slope(inputs$data_gam2, inputs$fit_gam2, "x2", smooth = "s(x2, by = g)", g_var = "g")
-  slopes3 <- local_slope(inputs$data_gam2, inputs$fit_gam2, "x2", smooth = "s(x2, by = g)", add_vars = list(g = "b"))
+  slopes <- local_slope(inputs$data_gam, inputs$fit_gam, "x2", smooth = "s(x2)", pts = 498)
+  slopes2 <- local_slope(inputs$data_gam2, inputs$fit_gam2, "x2", smooth = "s(x2, by = g)", g_var = "g", pts = 459)
+  slopes3 <- local_slope(
+    inputs$data_gam2, inputs$fit_gam2, "x2", smooth = "s(x2, by = g)",
+    add_vars = list(g = "b"), pts = 459
+  )
   slopes4 <- local_slope(
-    inputs$data_gam2, inputs$fit_gam3, "x2", smooth = "s(x2, by = g)", g_var = "g", add_vars = list(x1 = 1:(459 * 3))
+    inputs$data_gam2, inputs$fit_gam3, "x2", smooth = "s(x2, by = g)",
+    g_var = "g", add_vars = list(x1 = 1:(459 * 3)), pts = 459
   )
   list(
     slopes = slopes,

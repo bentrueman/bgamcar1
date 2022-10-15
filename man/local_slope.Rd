@@ -12,6 +12,7 @@ local_slope(
   smooth,
   g_var = NULL,
   add_vars = NULL,
+  pts = 200,
   ...
 )
 }
@@ -31,6 +32,8 @@ local_slope(
 \item{add_vars}{brms::posterior_smooths() requires that all variables used in
 constructing the autocorrelation term are also included in newdata arg... even if they are not used in the smooth.
 Add them here as a named list of new columns; if they don't appear in the smooth, they won't contribute to the output.}
+
+\item{pts}{Number of points at which to estimate the slope.}
 
 \item{...}{Additional arguments passed to \code{brms::posterior_smooths()}.}
 }

@@ -11,6 +11,7 @@
 #' @param add_vars brms::posterior_smooths() requires that all variables used in
 #' constructing the autocorrelation term are also included in newdata arg... even if they are not used in the smooth.
 #' Add them here as a named list of new columns; if they don't appear in the smooth, they won't contribute to the output.
+#' @param pts Number of points at which to estimate the slope.
 #'
 #' @return A `tibble` containing the (tidy) output of `brms::posterior_smooth()` and the calculated slopes.
 #' @importFrom brms posterior_smooths
@@ -33,13 +34,15 @@
 #' )
 #' local_slope(data_gam, fit, "x2", smooth = "s(x2)")
 #'
-local_slope <- function(input, object, x_var, epsilon = .001, smooth, g_var = NULL, add_vars = NULL, ...) {
+local_slope <- function(
+    input, object, x_var, epsilon = .001,
+    smooth, g_var = NULL, add_vars = NULL, pts = 200, ...) {
 
   grid_1 <- data.frame(
     seq(
       min(input[, x_var]),
       max(input[, x_var]),
-      by = 2 * epsilon
+      length.out = pts
     )
   )
 
