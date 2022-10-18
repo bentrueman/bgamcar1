@@ -9,7 +9,7 @@ add_pred_draws_car1(
   object,
   type = "epred",
   car1 = TRUE,
-  draw_ids = 1:4000,
+  draw_ids = NULL,
   ...
 )
 }
@@ -23,7 +23,7 @@ for\code{type = prediction}, draws are from the posterior predictive.}
 
 \item{car1}{Logical. Add CAR(1) errors?}
 
-\item{draw_ids}{Draw IDs from model object.}
+\item{draw_ids}{Draw IDs from model object. If NULL (the default), all draws are used.}
 
 \item{...}{Argument passed on to \code{tidybayes::add_epred_draws()}}
 }

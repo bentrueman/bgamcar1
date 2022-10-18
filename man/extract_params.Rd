@@ -4,14 +4,14 @@
 \alias{extract_params}
 \title{Extract parameters from a \code{brms} model}
 \usage{
-extract_params(object, car1 = TRUE, draw_ids)
+extract_params(object, car1 = TRUE, draw_ids = NULL)
 }
 \arguments{
 \item{object}{A \code{brms} model object.}
 
 \item{car1}{Logical. Extract CAR(1) parameter?}
 
-\item{draw_ids}{Numeric draw ids from the \code{brms} model.}
+\item{draw_ids}{Numeric draw ids from the \code{brms} model. If NULL (the default), all draws are used.}
 }
 \value{
 A dataframe of draws.

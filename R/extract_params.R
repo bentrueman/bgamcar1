@@ -2,7 +2,7 @@
 #'
 #' @param object A `brms` model object.
 #' @param car1 Logical. Extract CAR(1) parameter?
-#' @param draw_ids Numeric draw ids from the `brms` model.
+#' @param draw_ids Numeric draw ids from the `brms` model. If NULL (the default), all draws are used.
 #'
 #' @return A dataframe of draws.
 #' @importFrom brms as_draws_df
@@ -26,15 +26,22 @@
 #'    chains = 3
 #'  )
 #'  extract_params(fit, car1 = FALSE, draw_ids = 1)
-extract_params <- function(object, car1 = TRUE, draw_ids) {
+extract_params <- function(object, car1 = TRUE, draw_ids = NULL) {
+
   this_var <- if (car1) {
     "ar[1]"
   } else {
     "Intercept"
   }
 
-  out <- as_draws_df(object, variable = this_var) %>%
-    as_tibble() %>%
+  out_raw <- as_draws_df(object, variable = this_var) %>%
+    as_tibble()
+
+  if (is.null(draw_ids)) {
+    draw_ids <- seq_len(nrow(out_raw))
+  }
+
+  out <- out_raw %>%
     filter(.data$.draw %in% draw_ids) %>%
     mutate(.index = as.numeric(factor(.data$.draw)))
 

@@ -17,6 +17,9 @@ test_that("add_pred_draws_car1() yields the same predictions as fitted.brmsfit()
   ) |>
     tibble::as_tibble()
   expect_equal(preds$.epred, fitted_vals$Estimate)
+  # also test that draw_ids = NULL works:
+  preds_all <- add_pred_draws_car1(inputs$data, inputs$fit, car1 = FALSE)
+  expect_equal(nrow(preds_all), nrow(inputs$data) * 3000)
 })
 
 test_that("add_pred_draws_car1() yields the same results as tidybayes::add_epred_draws() for a regular AR(1) fit.", {
