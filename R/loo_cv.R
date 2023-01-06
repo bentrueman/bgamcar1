@@ -35,6 +35,10 @@ loo_cv <- function(input, object, censoring = TRUE, ...) {
 
   varnames <- extract_resp(object) # extract responses from model formula
 
+  if (censoring == TRUE && is.na(varnames$cens)) {
+    stop("No censoring variable found in model formula.")
+  }
+
   n <- nrow(input) %>%
     seq_len() %>%
     as.character()
