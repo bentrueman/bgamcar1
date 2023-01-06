@@ -8,6 +8,7 @@
 #'
 #' @return A dataframe containing the summarized predictions.
 #' @importFrom data.table as.data.table
+#' @importFrom tidyselect all_of
 #' @importFrom dplyr  %>% select mutate rename
 #' @importFrom tibble as_tibble
 #' @importFrom stats median quantile
@@ -52,7 +53,7 @@ summarize_preds <- function(x, y_var = lead, retrans = TRUE, pred_var = ".epred"
     x <- x %>%
       mutate(
         across(
-          c(.data[[pred_var]], .data[[".lower"]], .data[[".upper"]]),
+          all_of(c(pred_var, ".lower", ".upper")),
           ~ retrans(.x, {{ y_var }}, ...),
           .names = "{.col}_retrans"
         )

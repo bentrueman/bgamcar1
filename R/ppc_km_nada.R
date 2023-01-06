@@ -39,6 +39,9 @@ ppc_km_nada <- function(input,
                         car1 = TRUE,
                         seed,
                         ...) {
+  cenfit_summ <- NULL
+  data <- NULL
+
   varnames <- extract_resp(object)
 
   if (is.na(varnames$cens)) stop("Model formula does not include censoring")
@@ -80,8 +83,8 @@ ppc_km_nada <- function(input,
       ),
       cenfit_summ = map(cenfit, NADA::summary)
     ) %>%
-    unnest(.data$cenfit_summ) %>%
-    select(-c(.data$data, .data$cenfit))
+    unnest(cenfit_summ) %>%
+    select(-c(data, cenfit))
 
   bind_rows(
     "Posterior draws" = pp,

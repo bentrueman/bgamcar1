@@ -28,6 +28,8 @@
 #'  extract_params(fit, car1 = FALSE, draw_ids = 1)
 extract_params <- function(object, car1 = TRUE, draw_ids = NULL) {
 
+  Intercept <- NULL
+
   this_var <- if (car1) {
     "ar[1]"
   } else {
@@ -48,7 +50,7 @@ extract_params <- function(object, car1 = TRUE, draw_ids = NULL) {
   if (!car1) {
     # this adds .chain and .iteration to draws object, which would otherwise be missing
     # (but is needed for loo::loo())
-    select(out, -.data$Intercept)
+    select(out, -Intercept)
   } else {
     out
   }

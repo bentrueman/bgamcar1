@@ -12,3 +12,8 @@ test_that("brms::loo() yields the same results as loo_cv()", {
   expect_equal(loo1a$estimate, loo2a$estimate)
   expect_equal(loo1b$estimate, loo2b$estimate)
 })
+
+test_that("loo_cv() returns an error when the censoring variable is missing", {
+  inputs <- load_test_models()
+  expect_error(loo_cv(inputs$data_ar, inputs$fit_ar, censoring = TRUE, draw_ids = 1:2000))
+})

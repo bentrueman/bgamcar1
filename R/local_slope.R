@@ -17,7 +17,6 @@
 #' @importFrom brms posterior_smooths
 #' @importFrom tidyr pivot_longer crossing
 #' @importFrom tidyselect everything starts_with
-#' @importFrom rlang .data
 #' @export
 #'
 #' @examples

@@ -9,7 +9,6 @@
 #' @return A dataframe containing the (possibly imputed) observations.
 #' @importFrom dplyr %>%  ungroup if_else
 #' @importFrom tibble as_tibble
-#' @importFrom rlang .data
 #' @importFrom tidyselect matches
 #' @export
 #'

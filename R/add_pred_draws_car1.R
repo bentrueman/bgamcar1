@@ -41,6 +41,10 @@ add_pred_draws_car1 <- function(input,
                                 ...) {
   if (!type %in% c("epred", "prediction")) stop("'type' must be either 'prediction' or 'epred'")
 
+  .draw <- NULL
+  .chain <- NULL
+  .iteration <- NULL
+
   inputnames <- names(input)
 
   data_vars <- glue::glue("^{inputnames}$") %>% # group output by columns in "data"
@@ -77,8 +81,8 @@ add_pred_draws_car1 <- function(input,
     ...
   ) %>%
     ungroup() %>%
-    rename(.index = .data$.draw) %>%
-    select(-c(.data$.chain, .data$.iteration)) %>%
+    rename(.index = .draw) %>%
+    select(-c(.chain, .iteration)) %>%
     left_join(params, by = ".index")
 
   # add CAR(1) process to mean:
