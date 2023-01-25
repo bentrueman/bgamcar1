@@ -39,9 +39,7 @@ loo_cv <- function(input, object, censoring = TRUE, ...) {
     stop("No censoring variable found in model formula.")
   }
 
-  n <- nrow(input) %>%
-    seq_len() %>%
-    as.character()
+  n <- as.character(seq_len(nrow(input)))
 
   ll <- add_pred_draws_car1(input, object, ...) %>%
     calc_ll(varnames$resp, varnames$y2, varnames$cens, cens = censoring) %>%

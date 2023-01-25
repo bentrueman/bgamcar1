@@ -35,6 +35,7 @@ calc_ll <- function(x, response, upper = NA, censored = NULL, cens = TRUE) {
   .epred <- NULL
   sigma <- NULL
   log_lik <- NULL
+  ..response <- NULL
   if(is.na(upper)) {
     upper <- response
   }
