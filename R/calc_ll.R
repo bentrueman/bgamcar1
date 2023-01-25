@@ -42,18 +42,18 @@ calc_ll <- function(x, response, upper = NA, censored = NULL, cens = TRUE) {
   x <- as.data.table(x)
   if (cens) {
     x[, log_lik := case_when(
-      get(censored) == "none" ~ dstudent_t(get(response), nu, .epred, sigma, log = TRUE),
-      get(censored) == "left" ~ pstudent_t(get(response), nu, .epred, sigma, log.p = TRUE),
-      get(censored) == "right" ~ pstudent_t(get(response), nu, .epred, sigma, log.p = TRUE, lower.tail = FALSE),
-      get(censored) == "interval" ~ log(
-        exp(pstudent_t(get(upper), nu, .epred, sigma, log.p = TRUE)) -
-          exp(pstudent_t(get(response), nu, .epred, sigma, log.p = TRUE))
+      get(..censored) == "none" ~ dstudent_t(get(..response), nu, .epred, sigma, log = TRUE),
+      get(..censored) == "left" ~ pstudent_t(get(..response), nu, .epred, sigma, log.p = TRUE),
+      get(..censored) == "right" ~ pstudent_t(get(..response), nu, .epred, sigma, log.p = TRUE, lower.tail = FALSE),
+      get(..censored) == "interval" ~ log(
+        exp(pstudent_t(get(..upper), nu, .epred, sigma, log.p = TRUE)) -
+          exp(pstudent_t(get(..response), nu, .epred, sigma, log.p = TRUE))
       )
 
     )]
   } else {
     x[, log_lik := dstudent_t(
-      get(response), nu, .epred, sigma,
+      get(..response), nu, .epred, sigma,
       log = TRUE
     )]
   }
