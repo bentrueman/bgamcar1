@@ -14,6 +14,7 @@ fit_stan_model(
   sample_prior = "no",
   knots = NULL,
   d_x = NULL,
+  family = student(),
   ...
 )
 }

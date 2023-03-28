@@ -335,7 +335,7 @@ help_calc_ll_preds <- function(inputs) {
     dplyr::ungroup()
   ll_myfn1 <- ll_myfn_in1 |>
     calc_ll("y", censored = "ycens", upper = "y2") |>
-    tidyr::pivot_wider(c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
+    tidyr::pivot_wider(id_cols = c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
     dplyr::select(tidyselect::matches("^\\d")) |>
     as.matrix()
 
@@ -349,7 +349,7 @@ help_calc_ll_preds <- function(inputs) {
   ll_myfn_in_test <- ll_myfn_in2
   ll_myfn2 <- ll_myfn_in2 |>
     calc_ll("y", cens = FALSE) |>
-    tidyr::pivot_wider(c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
+    tidyr::pivot_wider(id_cols = c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
     dplyr::select(tidyselect::matches("^\\d")) |>
     as.matrix()
 
@@ -365,7 +365,7 @@ help_calc_ll <- function(inputs) {
     dplyr::ungroup()
   ll_myfn1 <- ll_myfn_in1 |>
     calc_ll("y", censored = "ycens", upper = "y2") |>
-    tidyr::pivot_wider(c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
+    tidyr::pivot_wider(id_cols = c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
     dplyr::select(tidyselect::matches("^\\d")) |>
     as.matrix()
 
@@ -379,7 +379,7 @@ help_calc_ll <- function(inputs) {
   ll_myfn_in_test <- ll_myfn_in2
   ll_myfn2 <- ll_myfn_in2 |>
     calc_ll("y", cens = FALSE) |>
-    tidyr::pivot_wider(c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
+    tidyr::pivot_wider(id_cols = c(.draw, .chain, .iteration), names_from = .row, values_from = log_lik) |>
     dplyr::select(tidyselect::matches("^\\d")) |>
     as.matrix()
 

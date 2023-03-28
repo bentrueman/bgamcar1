@@ -43,6 +43,7 @@ fit_stan_model <- function(file,
                            sample_prior = "no",
                            knots = NULL,
                            d_x = NULL,
+                           family = student(),
                            ...) {
   path <- str_remove(file, "\\/[^\\/]+$")
   csvfiles <- list.files(path = path, pattern = ".+\\.csv", full.names = TRUE)
@@ -58,7 +59,7 @@ fit_stan_model <- function(file,
     bform,
     data = bdata,
     prior = bpriors,
-    family = student(),
+    family = family,
     sample_prior = sample_prior,
     knots = knots
   )
@@ -81,7 +82,7 @@ fit_stan_model <- function(file,
     bform,
     data = bdata,
     prior = bpriors,
-    family = student(),
+    family = family,
     sample_prior = sample_prior,
     knots = knots
   )
@@ -113,7 +114,7 @@ fit_stan_model <- function(file,
     bform,
     data = bdata,
     prior = bpriors,
-    family = student(),
+    family = family,
     knots = knots,
     empty = TRUE
   )
