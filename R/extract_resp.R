@@ -45,7 +45,7 @@ extract_resp <- function(x) {
     "cens" = cenvar,
     "y2" = y2,
     "gr_sigma" = gr_sig,
-    "gr_ar" = if_else(gr_ar == "NA", NA_character_, gr_ar),
+    "gr_ar" = if_else(gr_ar == "NA" | is.null(gr_ar), NA_character_, gr_ar),
     "time_ar" = time_ar
   )
 }

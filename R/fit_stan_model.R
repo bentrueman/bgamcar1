@@ -12,6 +12,7 @@
 #' @param d_x A vector representing the spacing in time of observations in each series,
 #' equal to zero at the first timestep. If `NULL` (the default), `d_x` is drawn from the dataframe `bdata`.
 #' @param ... Passed on to `rstan::stan()`.
+#' @param family A `brmsfamily` object.
 #'
 #' @return A `brms` model object fitted with `rstan`.
 #' @importFrom stringr str_remove str_extract str_detect

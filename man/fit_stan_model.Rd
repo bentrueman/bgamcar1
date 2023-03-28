@@ -39,6 +39,8 @@ post-processing functions; it's generally better to create new, transformed vari
 \item{d_x}{A vector representing the spacing in time of observations in each series,
 equal to zero at the first timestep. If \code{NULL} (the default), \code{d_x} is drawn from the dataframe \code{bdata}.}
 
+\item{family}{A \code{brmsfamily} object.}
+
 \item{...}{Passed on to \code{rstan::stan()}.}
 }
 \value{
