@@ -39,13 +39,18 @@ extract_resp <- function(x) {
   y2 <- ifelse(is.na(y2), str_extract(censform, "(?<=,\\s?)\\w+"), y2)
   gr_sig <- str_extract(as_char[2], "(?<=sigma ~ ).+(?=\\)$)")
   gr_ar <- prep$dpars$mu$ac$acef$gr
+  # convert "NA" to NA_character_:
+  gr_ar <- if (!is.null(gr_ar)) {
+    if (gr_ar == "NA") {NA_character_} else
+      gr_ar
+  }
   time_ar <- prep$dpars$mu$ac$acef$time
   list(
     "resp" = response,
     "cens" = cenvar,
     "y2" = y2,
     "gr_sigma" = gr_sig,
-    "gr_ar" = if_else(gr_ar == "NA" | is.null(gr_ar), NA_character_, gr_ar),
+    "gr_ar" = gr_ar,
     "time_ar" = time_ar
   )
 }
