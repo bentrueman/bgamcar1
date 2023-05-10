@@ -18,7 +18,7 @@ test_that("local_slope() returns expected values", {
 
   # the following expectations fail on GHA but pass locally
   # I think the problem might have to do with posterior_smooths()
-  # (https://github.com/paul-buerkner/brms/issues/1386)
+  # (see https://github.com/paul-buerkner/brms/issues/1465)
   skip_on_ci()
   expect_snapshot(slp$slopes)
   expect_snapshot(slp$slopes2) # factor-smooth interaction

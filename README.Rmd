@@ -86,7 +86,7 @@ fitted_car1 %>%
   mutate(
     across(
       c(.epred, .lower, .upper),
-      ~ retrans(.x, lead, recensor = TRUE),
+      ~ retrans(.x, lead, recensor = TRUE)
     )
   ) %>%
   ggplot(aes(date)) +
