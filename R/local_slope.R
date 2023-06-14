@@ -8,7 +8,7 @@
 #' @param smooth The smooth term for which to calculate local slopes. Passed on to `brms::posterior_smooths()`.
 #' @param ... Additional arguments passed to `brms::posterior_smooths()`.
 #' @param g_var An optional grouping variable for factor-smooth interactions.
-#' @param add_vars brms::posterior_smooths() requires that all variables used in
+#' @param add_vars In older versions of brms, brms::posterior_smooths() required that all variables used in
 #' constructing the autocorrelation term are also included in newdata arg... even if they are not used in the smooth.
 #' Add them here as a named list of new columns; if they don't appear in the smooth, they won't contribute to the output.
 #' @param pts Number of points at which to estimate the slope.

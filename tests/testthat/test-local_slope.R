@@ -1,5 +1,11 @@
 
 test_that("local_slope() returns expected values", {
+
+  # the following expectations fail on GHA but pass locally
+  # I think the problem might have to do with posterior_smooths()
+  # (see https://github.com/paul-buerkner/brms/issues/1465)
+  # skip_on_ci() # should pass GHA using brms version 2.19.6
+
   inputs <- load_test_gams()
   slp <- help_local_slope(inputs)
 
@@ -15,17 +21,13 @@ test_that("local_slope() returns expected values", {
   # that variables used in brms::ar() also present in newdata)
   expect_equal(slp$slopes2$smooth, slp$slopes4$smooth)
   expect_equal(slp$slopes2$slope, slp$slopes4$slope)
-
-  # the following expectations fail on GHA but pass locally
-  # I think the problem might have to do with posterior_smooths()
-  # (see https://github.com/paul-buerkner/brms/issues/1465)
-  skip_on_ci()
   expect_snapshot(slp$slopes)
   expect_snapshot(slp$slopes2) # factor-smooth interaction
 
 })
 
 test_that("local_slope() returns an error when smooth term does not include CAR(1) variables", {
+  skip() # argument to local_slope() add_vars no longer necessary for brms version 2.19.6 (and higher?)
   inputs <- load_test_gams()
   expect_error(
     local_slope(inputs$data_gam2, inputs$fit_gam3, "x2", smooth = "s(x2, by = g)", g_var = "g"),

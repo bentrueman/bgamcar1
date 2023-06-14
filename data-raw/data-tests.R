@@ -9,10 +9,10 @@ library("tibble")
 library("dplyr")
 library("tidyr")
 library("readr")
-library("bgamcar1")
+# library("bgamcar1")
 library("mgcv")
-# library("devtools")
-# load_all()
+library("devtools")
+load_all()
 
 #------------------ test models ------------------
 
@@ -100,7 +100,9 @@ fit <- fit_stan_model(
   prior(normal(0, 1), class = Intercept),
   car1 = FALSE,
   save_warmup = FALSE,
-  chains = 3
+  chains = 3,
+  backend = "cmdstanr",
+  overwrite = TRUE
 )
 
 form_ar <- bf(y ~ ar(time = date, gr = series), sigma ~ series)
@@ -113,7 +115,9 @@ fit_ar <- fit_stan_model(
   data_ar,
   prior_ar,
   save_warmup = FALSE,
-  chains = 2
+  chains = 2,
+  backend = "cmdstanr",
+  overwrite = TRUE
 )
 
 form_car1 <- bf(y ~ ar(time = x))
@@ -125,7 +129,9 @@ fit_car1 <- fit_stan_model(
   data_car1,
   prior_ar,
   save_warmup = FALSE,
-  chains = 2
+  chains = 2,
+  backend = "cmdstanr",
+  overwrite = TRUE
 )
 
 fit_gam <- fit_stan_model(
@@ -135,7 +141,9 @@ fit_gam <- fit_stan_model(
   data_gam,
   save_warmup = FALSE,
   car1 = FALSE,
-  chains = 2
+  chains = 2,
+  backend = "cmdstanr",
+  overwrite = TRUE
 )
 
 fit_gam2 <- fit_stan_model(
@@ -145,7 +153,9 @@ fit_gam2 <- fit_stan_model(
   data_gam2,
   save_warmup = FALSE,
   car1 = FALSE,
-  chains = 2
+  chains = 2,
+  backend = "cmdstanr",
+  overwrite = TRUE
 )
 
 write_csv(data, "inst/extdata/data.csv")

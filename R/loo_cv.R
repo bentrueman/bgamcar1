@@ -1,4 +1,4 @@
-#' Approximate leave-one-out cross-validation (LOO)
+#' Approximate leave-one-out cross-validation (LOO) using `loo::loo()`.
 #'
 #' @param input The dataframe of observations used to generate the model.
 #' @param object A `brms` model object.

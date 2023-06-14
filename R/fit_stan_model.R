@@ -12,7 +12,9 @@
 #' @param d_x A vector representing the spacing in time of observations in each series,
 #' equal to zero at the first timestep. If `NULL` (the default), `d_x` is drawn from the dataframe `bdata`.
 #' @param ... Passed on to `rstan::stan()`.
-#' @param family A `brmsfamily` object.
+#' @param family A `brmsfamily` object. Note that some post-processing functions assume a student-t likelihood.
+#' @param backend Run Stan's algorithms using `rstan` or `cmdstanr`.
+#' @param overwrite Overwrite an exising model stored as CSVs? Defaults to `FALSE`.
 #'
 #' @return A `brms` model object fitted with `rstan`.
 #' @importFrom stringr str_remove str_extract str_detect
@@ -45,14 +47,11 @@ fit_stan_model <- function(file,
                            knots = NULL,
                            d_x = NULL,
                            family = student(),
+                           backend = "rstan",
+                           overwrite = FALSE,
                            ...) {
-  path <- str_remove(file, "\\/[^\\/]+$")
-  csvfiles <- list.files(path = path, pattern = ".+\\.csv", full.names = TRUE)
 
-  regex <- str_extract(file, "[^\\/]+$") %>%
-    paste0("_\\d\\.csv")
-
-  regex <- paste0("/", regex)
+  model_saved <- get_model(file)
 
   # generate stan data:
 
@@ -64,6 +63,8 @@ fit_stan_model <- function(file,
     sample_prior = sample_prior,
     knots = knots
   )
+
+  # check for presence of d_x in data or supplied as an argument:
 
   if (car1) {
     if (is.null(d_x)) {
@@ -94,12 +95,9 @@ fit_stan_model <- function(file,
 
   # fit model:
 
-  csv_matches <- str_detect(csvfiles, regex)
-
-  stanmod <- if (sum(csv_matches) > 0) {
-    csvfiles[csv_matches] %>%
-      rstan::read_stan_csv()
-  } else {
+  stanmod <- if (length(model_saved$csvs) > 0 && !overwrite) {
+    rstan::read_stan_csv(model_saved$csvs)
+  } else if (backend == "rstan") {
     rstan::stan(
       model_code = code,
       data = data,
@@ -107,20 +105,70 @@ fit_stan_model <- function(file,
       seed = seed,
       ...
     )
-  }
+  } else if (backend == "cmdstanr") {
+    if (!requireNamespace("cmdstanr", quietly = TRUE)) {
+      stop(
+        "Package \"cmdstanr\" must be installed for backend == \"cmdstanr\".",
+        .call = FALSE
+      )
+    }
+    fit_cmdstan_model(
+      code, data, seed, model_saved$path, model_saved$basename, file, ...
+    )
+  } else stop("Backend must be either \"rstan\" or \"cmdstanr\".")
 
   # feed back into brms:
 
-  brmsmod <- brm(
-    bform,
-    data = bdata,
-    prior = bpriors,
-    family = family,
-    knots = knots,
-    empty = TRUE
-  )
+  if (length(model_saved$rds) > 0 && !overwrite) {
+    brmsmod <- brm(
+      bform,
+      data = bdata,
+      prior = bpriors,
+      family = family,
+      knots = knots,
+      file = file
+    )
+  } else {
+    brmsmod <- brm(
+      bform,
+      data = bdata,
+      prior = bpriors,
+      family = family,
+      knots = knots,
+      empty = TRUE
+    )
+    # save empty fit:
+    brms:::write_brmsfit(brmsmod, file = file)
+  }
+
+  # add stan model to fit slot:
   brmsmod$fit <- stanmod
   brmsmod <- rename_pars(brmsmod)
 
   return(brmsmod)
 }
+
+get_model <- function(file) {
+  path <- str_remove(file, "\\/[^\\/]+$")# remove base filename
+  bname <- str_extract(file, "[^\\/]+$") # extract base filename
+  # list csv and rds files matching file path/basename combo:
+  csvfiles <- list.files(path = path,
+                         pattern = paste0("^", paste0(bname, "[-_]\\d\\.csv")),
+                         full.names = TRUE)
+  rdsfiles <- list.files(path = path, pattern = paste0(bname, "\\.rds"),
+                         full.names = TRUE)
+  list(csvs = csvfiles, path = path, basename = bname, rds = rdsfiles)
+}
+
+fit_cmdstan_model <- function(code, data, seed, path, basename, file, ...) {
+  model_setup <- cmdstanr::cmdstan_model(stan_file = cmdstanr::write_stan_file(code))
+  model <- model_setup$sample(data = data, seed = seed, ...)
+  model$save_output_files(
+    dir = path,
+    basename = basename,
+    random = FALSE,
+    timestamp = FALSE
+  )
+  rstan::read_stan_csv(model$output_files())
+}
+

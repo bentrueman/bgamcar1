@@ -2,7 +2,7 @@
 % Please edit documentation in R/loo_cv.R
 \name{loo_cv}
 \alias{loo_cv}
-\title{Approximate leave-one-out cross-validation (LOO)}
+\title{Approximate leave-one-out cross-validation (LOO) using \code{loo::loo()}.}
 \usage{
 loo_cv(input, object, censoring = TRUE, ...)
 }
@@ -19,7 +19,7 @@ loo_cv(input, object, censoring = TRUE, ...)
 An object of class \code{loo}.
 }
 \description{
-Approximate leave-one-out cross-validation (LOO)
+Approximate leave-one-out cross-validation (LOO) using \code{loo::loo()}.
 }
 \examples{
 library("brms")
