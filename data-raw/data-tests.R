@@ -87,7 +87,7 @@ data_gam <- withr::with_seed(seed, mgcv::gamSim(1, n = 200, scale = 2))
 data_gam2 <- withr::with_seed(seed, {
   data_gam %>%
     slice_sample(prop = 1/3) %>%
-    crossing(g = letters[1:3])
+    crossing(g = as.factor(letters[1:3]))
 })
 
 # fitted models:

@@ -1,8 +1,8 @@
 # stan_version_major = 2
 # stan_version_minor = 32
 # stan_version_patch = 2
-# model = model_19315193e207_model
-# start_datetime = 2023-06-14 14:02:06 UTC
+# model = model_eac4adf84c1_model
+# start_datetime = 2023-06-14 19:00:37 UTC
 # method = sample (Default)
 #   sample
 #     num_samples = 1000 (Default)
@@ -30,16 +30,16 @@
 #     num_chains = 1 (Default)
 # id = 1 (Default)
 # data
-#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpZflfNf/standata-193174201150.json
+#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpxQSeyH/standata-eac2dee9ab0.json
 # init = 2 (Default)
 # random
 #   seed = 1
 # output
-#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpZflfNf/model_2a6f929372c5b3f9c39a372f6cde7853-202306141102-1-956c0c.csv
+#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpxQSeyH/model_2a6f929372c5b3f9c39a372f6cde7853-202306141600-1-0f65c5.csv
 #   diagnostic_file =  (Default)
 #   refresh = 100 (Default)
 #   sig_figs = -1 (Default)
-#   profile_file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpZflfNf/model_2a6f929372c5b3f9c39a372f6cde7853-profile-202306141102-1-0e13ab.csv
+#   profile_file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpxQSeyH/model_2a6f929372c5b3f9c39a372f6cde7853-profile-202306141600-1-6c4ec1.csv
 # num_threads = 1 (Default)
 # stanc_version = stanc3 v2.32.2
 # stancflags = 
@@ -1049,7 +1049,7 @@ lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,divergent__,energy__,Inte
 -143.156,1,0.625032,3,7,0,147.293,0.0668134,0.730097,3.71144,-5.86147,0.0668134
 -143.929,0.968399,0.625032,2,3,0,144.114,0.0435113,0.713496,2.90393,-6.0223,0.0435113
 # 
-#  Elapsed Time: 1.66 seconds (Warm-up)
-#                1.582 seconds (Sampling)
-#                3.242 seconds (Total)
+#  Elapsed Time: 1.491 seconds (Warm-up)
+#                1.402 seconds (Sampling)
+#                2.893 seconds (Total)
 # 

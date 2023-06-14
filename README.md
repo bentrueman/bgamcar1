@@ -9,6 +9,8 @@
 coverage](https://codecov.io/gh/bentrueman/bgamcar1/branch/master/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/bgamcar1?branch=master)
 [![DOI](https://zenodo.org/badge/479471503.svg)](https://zenodo.org/badge/latestdoi/479471503)
 [![R-CMD-check](https://github.com/bentrueman/bgamcar1/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bentrueman/bgamcar1/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The `bgamcar1` package documents the bespoke functions used in the paper
@@ -71,23 +73,23 @@ bform <- bf(
 
 fit <- fit_stan_model(
   "man/models/demo", rseed, bform, simdat,
-  save_warmup = FALSE, iter = 3000,
-  warmup = 1000
+  save_warmup = FALSE, 
+  iter_sampling = 2000,
+  iter_warmup = 1000,
+  backend = "cmdstanr"
 )
 ```
 
 Generate predictions using `add_pred_draws_car()`…
 
 ``` r
-
-preds_car1 <- add_pred_draws_car1(simdat, fit, draw_ids = 1:8000)
+preds_car1 <- add_pred_draws_car1(simdat, fit)
 fitted_car1 <- ggdist::median_qi(preds_car1, .epred)
 ```
 
 … and plot the data and the model predictions:
 
 ``` r
-
 fitted_car1 %>%
   mutate(
     across(
@@ -114,7 +116,6 @@ Functions in `brms` that don’t involve the autocorrelation term can
 still be used:
 
 ``` r
-
 brms::conditional_smooths(fit) %>%
   plot(ask = FALSE, newpage = FALSE, plot = FALSE) %>%
   patchwork::wrap_plots()
@@ -126,7 +127,6 @@ Do a quick posterior predictive check. This is based on the function
 `cenfit()` from the `NADA` package (Lopaka, 2020).
 
 ``` r
-
 ppc <- ppc_km_nada(simdat, fit, seed = rseed)
 
 ppc %>%
@@ -144,10 +144,8 @@ cross-validation, using `loo_cv()`, a wrapper around `loo::loo()`
 (Vehtari & Gabry, 2017).
 
 ``` r
-
-loo_car1 <- loo_cv(simdat, fit, draw_ids = 1:8000)
-loo_gam <- loo_cv(simdat, fit, car1 = FALSE, draw_ids = 1:8000)
-
+loo_car1 <- loo_cv(simdat, fit)
+loo_gam <- loo_cv(simdat, fit, car1 = FALSE)
 loo::loo_compare(loo_car1, loo_gam)
 #>        elpd_diff se_diff
 #> model1   0.0       0.0  

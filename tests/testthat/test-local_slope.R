@@ -1,11 +1,6 @@
 
 test_that("local_slope() returns expected values", {
 
-  # the following expectations fail on GHA but pass locally
-  # I think the problem might have to do with posterior_smooths()
-  # (see https://github.com/paul-buerkner/brms/issues/1465)
-  # skip_on_ci() # should pass GHA using brms version 2.19.6
-
   inputs <- load_test_gams()
   slp <- help_local_slope(inputs)
 

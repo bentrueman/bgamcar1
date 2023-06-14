@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/bentrueman/bgamcar1/branch/master/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/bgamcar1?branch=master)
 [![DOI](https://zenodo.org/badge/479471503.svg)](https://zenodo.org/badge/latestdoi/479471503)
 [![R-CMD-check](https://github.com/bentrueman/bgamcar1/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bentrueman/bgamcar1/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The `bgamcar1` package documents the bespoke functions used in the paper “Comparing corrosion control treatments for drinking water using a robust Bayesian generalized additive model”, now available as a [journal article](https://doi.org/10.1021/acsestengg.2c00194), with data and code in a separate [repository](https://github.com/bentrueman/compare-cct). `bgamcar1` fits Bayesian generalized additive models with continuous-time first-order autoregressive (CAR(1), Pinheiro et al., 2021) errors, Student *t* likelihoods, and (optional) censoring. The functions are wrappers around or alternatives to existing `brms` functions (Bürkner, 2017, 2018), addressing a [current gap](https://github.com/paul-buerkner/brms/issues/741) in the models `brms` can fit.
@@ -65,23 +66,23 @@ bform <- bf(
 
 fit <- fit_stan_model(
   "man/models/demo", rseed, bform, simdat,
-  save_warmup = FALSE, iter = 3000,
-  warmup = 1000
+  save_warmup = FALSE, 
+  iter_sampling = 2000,
+  iter_warmup = 1000,
+  backend = "cmdstanr"
 )
 ```
 
 Generate predictions using `add_pred_draws_car()`... 
 
 ```{r predictions}
-
-preds_car1 <- add_pred_draws_car1(simdat, fit, draw_ids = 1:8000)
+preds_car1 <- add_pred_draws_car1(simdat, fit)
 fitted_car1 <- ggdist::median_qi(preds_car1, .epred)
 ```
 
 ... and plot the data and the model predictions:
 
 ```{r plot}
-
 fitted_car1 %>%
   mutate(
     across(
@@ -105,7 +106,6 @@ fitted_car1 %>%
 Functions in `brms` that don't involve the autocorrelation term can still be used:
 
 ```{r plot-smooths}
-
 brms::conditional_smooths(fit) %>%
   plot(ask = FALSE, newpage = FALSE, plot = FALSE) %>%
   patchwork::wrap_plots()
@@ -114,7 +114,6 @@ brms::conditional_smooths(fit) %>%
 Do a quick posterior predictive check. This is based on the function `cenfit()` from the `NADA` package (Lopaka, 2020).
 
 ```{r pp-check}
-
 ppc <- ppc_km_nada(simdat, fit, seed = rseed)
 
 ppc %>%
@@ -128,10 +127,8 @@ ppc %>%
 Finally, compare models using approximate leave-one-out cross-validation, using `loo_cv()`, a wrapper around `loo::loo()` (Vehtari & Gabry, 2017).
 
 ```{r loo-cv, warning=FALSE}
-
-loo_car1 <- loo_cv(simdat, fit, draw_ids = 1:8000)
-loo_gam <- loo_cv(simdat, fit, car1 = FALSE, draw_ids = 1:8000)
-
+loo_car1 <- loo_cv(simdat, fit)
+loo_gam <- loo_cv(simdat, fit, car1 = FALSE)
 loo::loo_compare(loo_car1, loo_gam)
 ```
 

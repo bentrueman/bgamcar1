@@ -1,8 +1,8 @@
 # stan_version_major = 2
 # stan_version_minor = 32
 # stan_version_patch = 2
-# model = model_19313129fa74_model
-# start_datetime = 2023-06-14 14:03:19 UTC
+# model = model_eac7a9c97e6_model
+# start_datetime = 2023-06-14 19:01:47 UTC
 # method = sample (Default)
 #   sample
 #     num_samples = 1000 (Default)
@@ -30,16 +30,16 @@
 #     num_chains = 1 (Default)
 # id = 1 (Default)
 # data
-#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpZflfNf/standata-193162ebc41e.json
+#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpxQSeyH/standata-eac31a46821.json
 # init = 2 (Default)
 # random
 #   seed = 1
 # output
-#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpZflfNf/model_7debc7b332da70788e07ddf2600d73d3-202306141103-1-1eb13d.csv
+#   file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpxQSeyH/model_7debc7b332da70788e07ddf2600d73d3-202306141601-1-77a085.csv
 #   diagnostic_file =  (Default)
 #   refresh = 100 (Default)
 #   sig_figs = -1 (Default)
-#   profile_file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpZflfNf/model_7debc7b332da70788e07ddf2600d73d3-profile-202306141103-1-7ffdfd.csv
+#   profile_file = /var/folders/fy/v4w9p72s7c996w8l8qfthxq40000gn/T/RtmpxQSeyH/model_7debc7b332da70788e07ddf2600d73d3-profile-202306141601-1-9768cd.csv
 # num_threads = 1 (Default)
 # stanc_version = stanc3 v2.32.2
 # stancflags = 
@@ -1049,7 +1049,7 @@ lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,divergent__,energy__,Inte
 -498.361,0.997406,0.0327007,7,127,0,514.857,7.38754,1.80318,11.4301,60.1599,-8.23458,0.430205,1.0723,0.482412,0.949709,-0.700317,-1.50538,-1.16617,-0.73135,3.01026,-1.2635,0.0732282,-0.0422382,0.505158,0.563229,-1.78376,0.939165,3.1152,6.0728,-0.543961,-0.401119,0.776397,-0.490761,0.142283,-2.09747,1.09925,-0.0484972,29.7711,-1.09129,-0.553311,-1.17033,0.30328,1.75158,-1.32415,0.34039,0.492072,3.42628,2.0579,55.2039,1.29503,3.22791,1.45219,2.85888,-2.10814,-4.53161,-3.51047,-2.20156,-7.67297,0.4447,-0.256504,3.06772,3.42038,-10.8324,5.70336,18.918,-16.1943,-11.9418,23.1142,-14.6105,4.23592,-62.4439,32.7258,-1.44382,-3.73907,-1.8958,-4.00987,1.03912,6.00139,-4.5369,1.16627,1.68598,-24.9973,7.38754
 -495.678,0.99876,0.0327007,7,127,0,517.783,7.34113,-4.43124,10.6158,77.026,-13.763,-1.25517,0.781594,-1.37118,1.101,-0.687555,-0.127318,0.954147,-0.570877,1.79064,0.681072,-1.84212,0.559836,-0.0736346,1.89104,0.144862,-0.911186,-0.990175,4.12748,0.789925,-0.600468,1.34338,-0.447716,0.904692,-2.2499,0.756107,-0.365024,18.8846,-0.522619,0.714388,-1.30133,0.242998,-1.97981,0.146587,0.457545,1.32722,3.54107,2.01605,16.1034,-2.24756,1.39955,-2.4553,1.97149,-1.23116,-0.227981,1.70853,-1.02223,2.81111,-7.6033,2.31071,-0.303925,7.80525,0.597915,-3.7609,-4.08693,14.9174,-11.3396,25.3692,-8.45492,17.0847,-42.4884,14.2788,-6.89332,-1.85063,2.5297,-4.60809,0.860474,-7.01064,0.519074,1.6202,4.69977,-19.9163,7.34113
 # 
-#  Elapsed Time: 5.476 seconds (Warm-up)
-#                4.534 seconds (Sampling)
-#                10.01 seconds (Total)
+#  Elapsed Time: 5.422 seconds (Warm-up)
+#                4.36 seconds (Sampling)
+#                9.782 seconds (Total)
 # 
