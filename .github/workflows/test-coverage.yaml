@@ -26,7 +26,7 @@ jobs:
       # packages that are needed for R CMD CHECK""
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: NA
+          dependencies: hard
           extra-packages: |
           covr
           ggdist
