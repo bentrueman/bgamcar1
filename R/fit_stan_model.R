@@ -126,7 +126,8 @@ fit_stan_model <- function(file,
       prior = bpriors,
       family = family,
       knots = knots,
-      file = file
+      file = file,
+      file_refit = "never"
     )
   } else {
     brmsmod <- brm(
@@ -155,7 +156,8 @@ get_model <- function(file) {
   csvfiles <- list.files(path = path,
                          pattern = paste0("^", paste0(bname, "[-_]\\d\\.csv")),
                          full.names = TRUE)
-  rdsfiles <- list.files(path = path, pattern = paste0(bname, "\\.rds"),
+  rdsfiles <- list.files(path = path,
+                         pattern = paste0("^", paste0(bname, "\\.rds")),
                          full.names = TRUE)
   list(csvs = csvfiles, path = path, basename = bname, rds = rdsfiles)
 }
