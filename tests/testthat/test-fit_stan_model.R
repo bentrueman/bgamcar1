@@ -13,13 +13,11 @@ test_that("fit_stan_model() loads the correct model and recovers params", {
 test_that("fit_stan_model() calls rstan correctly.", {
   # this test passes locally, but fails on GHA with the following error:
   # "Boost not found; call install.packages('BH')"
-  # skip_on_ci()
-  # update: this test no longer passes locally,
-  # due to an undiagnosed issue with rstan
-  skip()
+  skip_on_ci()
+  filepath <- paste0(system.file("extdata", package = "bgamcar1"), "/model")
   data <- tibble::tibble(y = rnorm(10))
   testmod <- fit_stan_model(
-    file = NULL,
+    file = filepath,
     seed = 1,
     bform = brms::bf(y ~ 1),
     bdata = data,
@@ -27,22 +25,26 @@ test_that("fit_stan_model() calls rstan correctly.", {
     chains = 1
   )
   expect_equal(class(testmod), "brmsfit")
+  file.remove(filepath)
+  file.remove(paste0(filepath, ".rds"))
 })
 
 test_that("fit_stan_model() calls cmdstanr correctly.", {
   skip_on_ci() # cmdstanr is suggested only
   data <- tibble::tibble(y = rnorm(10))
+  filepath <- paste0(system.file("extdata", package = "bgamcar1"), "/model")
   testmod <- fit_stan_model(
-    file = paste0(system.file("extdata", package = "bgamcar1"), "/model"),
+    file = filepath,
     seed = 1,
     bform = brms::bf(y ~ 1),
     bdata = data,
     car1 = FALSE,
     chains = 1,
-    backend = "cmdstanr",
-    overwrite = TRUE
+    backend = "cmdstanr"
   )
   expect_equal(class(testmod), "brmsfit")
+  file.remove(paste0(filepath, "-1.csv"))
+  file.remove(paste0(filepath, ".rds"))
 })
 
 test_that("fit_stan_model() returns an error if d_x argument is missing", {

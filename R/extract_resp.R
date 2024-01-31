@@ -5,6 +5,7 @@
 #' @return A list of extracted formula variables for use by other `bgamcar1` functions
 #' @importFrom brms prepare_predictions brmsterms
 #' @importFrom dplyr if_else
+#' @importFrom stats as.formula terms
 #' @export
 #'
 #' @examples
@@ -24,33 +25,25 @@
 #' extract_resp(fit)
 extract_resp <- function(x) {
   if (class(x)[1] != "brmsfit") stop("'x' must be a brmsfit object")
-
   prep <- prepare_predictions(x)
   bterms <- brmsterms(x$formula)
-
-  as_char <- as.character(x$formula)
-  response <- str_extract(as_char[1], "\\w+")
-  censform <- as.character(bterms$adforms$cens)[2]
-  # removes named y2 argument, then extracts first argument:
-  cenvar <- str_remove(censform, "y2\\s?\\=\\s?\\w+\\,?\\s?") %>%
-    str_extract("(?<=\\()\\w+")
-  # looks for named argument, if NA, looks for unnamed argument after comma:
-  y2 <- str_extract(censform, "(?<=y2\\s?\\=\\s?)\\w+")
-  y2 <- ifelse(is.na(y2), str_extract(censform, "(?<=,\\s?)\\w+"), y2)
-  gr_sig <- str_extract(as_char[2], "(?<=sigma ~ ).+(?=\\)$)")
-  gr_ar <- prep$dpars$mu$ac$acef$gr
+  response <- x$formula$resp
+  stopifnot("multivariate models are not currently handled" = length(response) == 1)
+  censoring_terms <- brms:::get_ad_vars(bterms, "cens")
+  grouping_factor_sigma <- bterms$dpars$sigma$formula
+  grouping_factor_sigma <- if (is.null(grouping_factor_sigma)) grouping_factor_sigma else
+    labels(terms(as.formula(grouping_factor_sigma)))
+  grouping_factor_ar <- prep$dpars$mu$ac$acef$gr
   # convert "NA" to NA_character_:
-  gr_ar <- if (!is.null(gr_ar)) {
-    if (gr_ar == "NA") {NA_character_} else
-      gr_ar
-  }
-  time_ar <- prep$dpars$mu$ac$acef$time
+  grouping_factor_ar <- if (is.null(grouping_factor_ar)) grouping_factor_ar else
+    if (grouping_factor_ar == "NA") NA_character_ else grouping_factor_ar
+  time_variable_ar <- prep$dpars$mu$ac$acef$time
   list(
     "resp" = response,
-    "cens" = cenvar,
-    "y2" = y2,
-    "gr_sigma" = gr_sig,
-    "gr_ar" = gr_ar,
-    "time_ar" = time_ar
+    "cens" = censoring_terms[1],
+    "y2" = censoring_terms[2],
+    "gr_sigma" = grouping_factor_sigma,
+    "gr_ar" = grouping_factor_ar,
+    "time_ar" = time_variable_ar
   )
 }

@@ -8,6 +8,9 @@ load_test_models <- function() {
   data <- readr::read_csv(paste0(system.file("extdata", package = "bgamcar1"), "/data.csv"))
   data_ar <- readr::read_csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_ar.csv"))
   data_car1 <- readr::read_csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_car1.csv"))
+  data_car1_missing <- readr::read_csv(
+    paste0(system.file("extdata", package = "bgamcar1"), "/data_car1_missing.csv")
+  )
 
   fit <- fit_stan_model(
     paste0(system.file("extdata", package = "bgamcar1"), "/test"),
@@ -46,18 +49,35 @@ load_test_models <- function() {
     chains = 2
   )
 
+  form_car1_missing <- brms::bf(y ~ mi(x_missing) + ar(time = x)) +
+    brms::bf(x_missing | mi() ~ 1) +
+    brms::set_rescor(FALSE)
+
+  fit_car1_missing <- fit_stan_model(
+    paste0(system.file("extdata", package = "bgamcar1"), "/test_car1_missing"),
+    seed,
+    form_car1_missing,
+    data_car1_missing,
+    prior_ar,
+    save_warmup = FALSE,
+    chains = 2
+  )
+
   list(
     # data:
     data = data,
     data_ar = data_ar,
     data_car1 = data_car1,
+    data_car1_missing = data_car1_missing,
     # models:
     fit = fit,
     fit_ar = fit_ar,
     fit_car1 = fit_car1,
+    fit_car1_missing = fit_car1_missing,
     # other inputs:
     form_ar = form_ar,
     form_car1 = form_car1,
+    form_car1_missing = form_car1_missing,
     prior_ar = prior_ar,
     phi_car1 = phi_car1
   )

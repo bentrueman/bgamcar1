@@ -82,6 +82,10 @@ data_car1 <- withr::with_seed(seed, {
     )
 })
 
+data_car1_missing <- data_car1
+data_car1_missing$x_missing <- data_car1_missing$x
+data_car1_missing$x_missing[59] <- NA
+
 data_gam <- withr::with_seed(seed, mgcv::gamSim(1, n = 200, scale = 2))
 
 data_gam2 <- withr::with_seed(seed, {
@@ -134,6 +138,22 @@ fit_car1 <- fit_stan_model(
   overwrite = TRUE
 )
 
+form_car1_missing <- bf(y ~ mi(x_missing) + ar(time = x)) +
+  bf(x_missing | mi() ~ 1) +
+  set_rescor(FALSE)
+
+fit_car1_missing <- fit_stan_model(
+  "inst/extdata/test_car1_missing",
+  seed,
+  form_car1_missing,
+  data_car1_missing,
+  prior_ar,
+  save_warmup = FALSE,
+  chains = 2,
+  backend = "cmdstanr",
+  overwrite = TRUE
+)
+
 fit_gam <- fit_stan_model(
   "inst/extdata/test_gam",
   seed,
@@ -161,6 +181,6 @@ fit_gam2 <- fit_stan_model(
 write_csv(data, "inst/extdata/data.csv")
 write_csv(data_ar, "inst/extdata/data_ar.csv")
 write_csv(data_car1, "inst/extdata/data_car1.csv")
+write_csv(data_car1_missing, "inst/extdata/data_car1_missing.csv")
 write_csv(data_gam, "inst/extdata/data_gam.csv")
 write_csv(data_gam2, "inst/extdata/data_gam2.csv")
-

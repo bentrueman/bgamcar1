@@ -18,7 +18,7 @@
 #'
 #' @return A `brms` model object fitted with `rstan`.
 #' @importFrom stringr str_remove str_extract str_detect
-#' @importFrom brms brm rename_pars make_stancode make_standata student
+#' @importFrom brms brm rename_pars make_stancode make_standata student is.brmsfit
 #' @importFrom rstan stan read_stan_csv
 #' @importFrom dplyr %>%
 #' @export
@@ -174,3 +174,65 @@ fit_cmdstan_model <- function(code, data, seed, path, basename, file, ...) {
   rstan::read_stan_csv(model$output_files())
 }
 
+# unexported functions from the brms package that are reproduced here:
+#
+# write_brmsfit <- function (x, file, compress = TRUE) {
+#   stopifnot(is.brmsfit(x))
+#   file <- check_brmsfit_file(file)
+#   x$file <- file
+#   saveRDS(x, file = file, compress = compress)
+#   invisible(x)
+# }
+#
+# check_brmsfit_file <- function (file) {
+#   file <- as_one_character(file)
+#   file_ending <- tolower(get_matches("\\.[^\\.]+$", file))
+#   if (!isTRUE(file_ending == ".rds")) {
+#     file <- paste0(file, ".rds")
+#   }
+#   file
+# }
+#
+# as_one_character <- function (x, allow_na = FALSE) {
+#   s <- substitute(x)
+#   x <- as.character(x)
+#   if (length(x) != 1L || anyNA(x) && !allow_na) {
+#     s <- deparse0(s, max_char = 100L)
+#     stop2("Cannot coerce '", s, "' to a single character value.")
+#   }
+#   x
+# }
+#
+# get_matches <- function (pattern, text, simplify = TRUE, first = FALSE, ...) {
+#   x <- regmatches(text, gregexpr(pattern, text, ...))
+#   if (first) {
+#     x <- lapply(x, function(t) if (length(t))
+#       t[1]
+#       else t)
+#   }
+#   if (simplify) {
+#     if (first) {
+#       x <- lapply(x, function(t) if (length(t))
+#         t
+#         else "")
+#     }
+#     x <- unlist(x)
+#   }
+#   x
+# }
+#
+# deparse0 <- function (x, max_char = NULL, ...) {
+#   out <- collapse(deparse(x, ...))
+#   if (isTRUE(max_char > 0)) {
+#     out <- substr(out, 1L, max_char)
+#   }
+#   out
+# }
+#
+# stop2 <- function(...) {
+#   stop(..., call. = FALSE)
+# }
+#
+# collapse <- function(..., sep = "") {
+#   paste(..., sep = sep, collapse = "")
+# }
