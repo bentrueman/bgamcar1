@@ -13,21 +13,10 @@
 #' @export
 #'
 #' @examples
-#' seed <- 1
 #' library("brms")
-#' seed <- 1
-#' data <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data.csv"))
-#' fit <- fit_stan_model(
-#'    paste0(system.file("extdata", package = "bgamcar1"), "/test"),
-#'    seed,
-#'    bf(y | cens(ycens, y2 = y2) ~ 1),
-#'    data,
-#'    prior(normal(0, 1), class = Intercept),
-#'    car1 = FALSE,
-#'    save_warmup = FALSE,
-#'    chains = 3
-#'  )
-#' modify_stancode(fit$model)
+#' data <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_car1.csv"))
+#' scode <- make_stancode(bf(y ~ ar(time = x)), data)
+#' modify_stancode(scode)
 modify_stancode <- function(scode_raw, modify = "car1") {
   if (modify == "car1") modify_stancode_car1(scode_raw)
 }

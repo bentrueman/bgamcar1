@@ -66,7 +66,8 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
         save_warmup = FALSE,
         chains = 2
       )
-    )
+    ),
+    regexp = "column d_x not found in data"
   )
 
   # d_x as an argument:

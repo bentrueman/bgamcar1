@@ -68,11 +68,8 @@ fit_stan_model <- function(file,
 
   if (car1) {
     if (is.null(d_x)) {
-      if (is.null(bdata$d_x)) {
-        stop("Column d_x not found in data.")
-      } else {
-        data$s <- bdata$d_x
-      }
+      stopifnot("column d_x not found in data" = !is.null(bdata$d_x))
+      data$s <- bdata$d_x
     } else {
       data$s <- d_x
     }
