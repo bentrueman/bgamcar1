@@ -28,6 +28,11 @@
 #'  extract_params(fit, car1 = FALSE, draw_ids = 1)
 extract_params <- function(object, car1 = TRUE, draw_ids = NULL) {
 
+  response <- object$formula$resp
+  stopifnot(
+    "postprocessing methods do not currently support multivariate models" = length(response) == 1
+  )
+
   Intercept <- NULL
 
   this_var <- if (car1) {

@@ -39,7 +39,8 @@ add_pred_draws_car1 <- function(input,
                                 car1 = TRUE,
                                 draw_ids = NULL,
                                 ...) {
-  if (!type %in% c("epred", "prediction")) stop("'type' must be either 'prediction' or 'epred'")
+  # if (!type %in% c("epred", "prediction")) stop("'type' must be either 'prediction' or 'epred'")
+  stopifnot("'type' must be either 'prediction' or 'epred'" = type %in% c("epred", "prediction"))
 
   .draw <- NULL
   .chain <- NULL

@@ -2,7 +2,18 @@
 
 test_that("add_pred_draws_car1() returns an error for incorrect 'type'", {
   inputs <- load_test_models()
-  expect_error(add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, type = "wrong type"))
+  expect_error(
+    add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, type = "wrong type"),
+    regexp = "'type' must be either 'prediction' or 'epred'"
+  )
+})
+
+test_that("add_pred_draws_car1() returns an error for multivariate model", {
+  inputs <- load_test_models()
+  expect_error(
+    add_pred_draws_car1(inputs$data_car1_missing, inputs$fit_car1_missing),
+    regexp = "postprocessing methods do not currently support multivariate models"
+  )
 })
 
 test_that("add_pred_draws_car1() yields the same predictions as fitted.brmsfit()", {

@@ -10,3 +10,11 @@ test_that("extract_params() yields expected output.", {
   expect_equal(fit_ar_pars, reference)
   expect_equal(nrow(fit_ar_pars_all), 2e3)
 })
+
+test_that("extract_params() returns an error for multivariate model.", {
+  inputs <- load_test_models()
+  expect_error(
+    extract_params(inputs$fit_car1_missing),
+    regexp = "postprocessing methods do not currently support multivariate models"
+  )
+})

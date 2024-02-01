@@ -15,3 +15,11 @@ test_that("ppc_km_nada() yields the same ecdf as NADA::cenfit()", {
     tibble::as_tibble()
   expect_equal(x, y)
 })
+
+test_that("ppc_km_nada() returns an error for multivariate model", {
+  inputs <- load_test_models()
+  expect_error(
+    ppc_km_nada(inputs$data_car1_missing, inputs$fit_car1_missing),
+    regexp = "postprocessing methods do not currently support multivariate models"
+  )
+})

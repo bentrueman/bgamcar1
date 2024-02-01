@@ -17,3 +17,11 @@ test_that("loo_cv() returns an error when the censoring variable is missing", {
   inputs <- load_test_models()
   expect_error(loo_cv(inputs$data_ar, inputs$fit_ar, censoring = TRUE, draw_ids = 1:2000))
 })
+
+test_that("loo_cv() returns an error for multivariate model", {
+  inputs <- load_test_models()
+  expect_error(
+    loo_cv(inputs$data_car1_missing, inputs$fit_car1_missing),
+    regexp = "postprocessing methods do not currently support multivariate models"
+  )
+})

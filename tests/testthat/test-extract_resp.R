@@ -1,7 +1,7 @@
 
 test_that("extract_resp() returns error when input is wrong class.", {
   x <- tibble(formula = 1)
-  expect_error(extract_resp(x))
+  expect_error(extract_resp(x), regexp = "'x' must be a brmsfit object")
 })
 
 test_that("extract_resp() extracts the correct model names.", {
@@ -38,5 +38,8 @@ test_that("extract_resp() works with a GAM even when the 'by' variable is conver
 
 test_that("extract_resp() returns an error for a multivariate model", {
   inputs <- load_test_models()
-  expect_error(extract_resp(inputs$fit_car1_missing))
+  expect_error(
+    extract_resp(inputs$fit_car1_missing),
+    regexp = "postprocessing methods do not currently support multivariate models"
+  )
 })

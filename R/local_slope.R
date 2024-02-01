@@ -37,6 +37,11 @@ local_slope <- function(
     input, object, x_var, epsilon = .001,
     smooth, g_var = NULL, add_vars = NULL, pts = 200, ...) {
 
+  response <- object$formula$resp
+  stopifnot(
+    "postprocessing methods do not currently support multivariate models" = length(response) == 1
+  )
+
   grid_1 <- data.frame(
     seq(
       min(input[, x_var]),

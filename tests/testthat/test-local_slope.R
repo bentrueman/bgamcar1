@@ -29,3 +29,11 @@ test_that("local_slope() returns an error when smooth term does not include CAR(
     regexp = "One or more variables used to construct CAR\\(1\\) term"
   )
 })
+
+test_that("local_slope() returns an error for multivariate model.", {
+  inputs <- load_test_models()
+  expect_error(
+    local_slope(inputs$data_car1_missing, inputs$fit_car1_missing),
+    regexp = "postprocessing methods do not currently support multivariate models"
+  )
+})
