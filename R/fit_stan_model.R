@@ -139,7 +139,7 @@ fit_stan_model <- function(file,
       empty = TRUE
     )
     # save empty fit:
-    brms:::write_brmsfit(brmsmod, file = file)
+    if (!is.null(file)) brms:::write_brmsfit(brmsmod, file = file)
   }
 
   # add stan model to fit slot:
