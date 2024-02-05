@@ -17,6 +17,10 @@ fit_stan_model(
   family = student(),
   backend = "rstan",
   overwrite = FALSE,
+  var_car1 = NULL,
+  var_xcens = NULL,
+  cens_ind = NULL,
+  lcl = NULL,
   ...
 )
 }
@@ -46,6 +50,16 @@ equal to zero at the first timestep. If \code{NULL} (the default), \code{d_x} is
 \item{backend}{Run Stan's algorithms using \code{rstan} or \code{cmdstanr}.}
 
 \item{overwrite}{Overwrite an exising model stored as CSVs? Defaults to \code{FALSE}.}
+
+\item{var_car1}{For multivariate models, specify which variable to generate CAR(1) errors for.}
+
+\item{var_xcens}{A character vector containing the names of predictor variables with left-censoring; the order should
+correspond to that of \code{lcl} and \code{cens_ind}.}
+
+\item{cens_ind}{A character vector containing the names of left-censoring indicators variables corresponding
+to the contents of \code{var_xcens}.}
+
+\item{lcl}{A character vector of left censoring limits for predictor variables (\code{"left"} for left-censored, \code{"none"} for observed).}
 
 \item{...}{Passed on to \code{rstan::stan()}.}
 }

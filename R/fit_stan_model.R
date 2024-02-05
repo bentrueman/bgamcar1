@@ -15,6 +15,12 @@
 #' @param family A `brmsfamily` object. Note that some post-processing functions assume a student-t likelihood.
 #' @param backend Run Stan's algorithms using `rstan` or `cmdstanr`.
 #' @param overwrite Overwrite an exising model stored as CSVs? Defaults to `FALSE`.
+#' @param var_car1 For multivariate models, specify which variable to generate CAR(1) errors for.
+#' @param lcl A character vector of left censoring limits for predictor variables (`"left"` for left-censored, `"none"` for observed).
+#' @param var_xcens A character vector containing the names of predictor variables with left-censoring; the order should
+#' correspond to that of `lcl` and `cens_ind`.
+#' @param cens_ind A character vector containing the names of left-censoring indicators variables corresponding
+#' to the contents of `var_xcens`.
 #'
 #' @return A `brms` model object fitted with `rstan`.
 #' @importFrom stringr str_remove str_extract str_detect
@@ -49,6 +55,10 @@ fit_stan_model <- function(file,
                            family = student(),
                            backend = "rstan",
                            overwrite = FALSE,
+                           var_car1 = NULL,
+                           var_xcens = NULL,
+                           cens_ind = NULL,
+                           lcl = NULL,
                            ...) {
 
   model_saved <- get_model(file)
@@ -64,7 +74,7 @@ fit_stan_model <- function(file,
     knots = knots
   )
 
-  # check for presence of d_x in data or supplied as an argument:
+  # check for presence of d_x in data or supplied as an argument, then add to stan data:
 
   if (car1) {
     if (is.null(d_x)) {
@@ -73,6 +83,12 @@ fit_stan_model <- function(file,
     } else {
       data$s <- d_x
     }
+  }
+
+  # modify standata:
+
+  if (!is.null(var_xcens)) {
+    data <- modify_standata(data, bdata, lcl, var_xcens = var_xcens, cens_ind = cens_ind)
   }
 
   # generate stan code:
@@ -86,8 +102,14 @@ fit_stan_model <- function(file,
     knots = knots
   )
 
+  # modify stancode:
+
   if (car1) {
-    code <- modify_stancode(code)
+    code <- modify_stancode(code, var_car1 = var_car1)
+  }
+
+  if (!is.null(var_xcens)) {
+    code <- modify_stancode(code, modify = "xcens", var_xcens = var_xcens)
   }
 
   # fit model:
@@ -160,7 +182,9 @@ get_model <- function(file) {
 }
 
 fit_cmdstan_model <- function(code, data, seed, path, basename, file, ...) {
-  model_setup <- cmdstanr::cmdstan_model(stan_file = cmdstanr::write_stan_file(code))
+  model_setup <- cmdstanr::cmdstan_model(stan_file = cmdstanr::write_stan_file(code), compile = FALSE)
+  model_setup$format(overwrite_file = TRUE, canonicalize = TRUE, backup = FALSE)
+  model_setup$compile()
   model <- model_setup$sample(data = data, seed = seed, ...)
   model$save_output_files(
     dir = path,

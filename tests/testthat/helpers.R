@@ -49,8 +49,8 @@ load_test_models <- function() {
     chains = 2
   )
 
-  form_car1_missing <- brms::bf(y ~ mi(x_missing) + ar(time = x)) +
-    brms::bf(x_missing | mi() ~ 1) +
+  form_car1_missing <- brms::bf(y ~ mi(x) + ar(time = time)) +
+    brms::bf(x | mi() ~ 1, family = "gaussian") +
     brms::set_rescor(FALSE)
 
   fit_car1_missing <- fit_stan_model(

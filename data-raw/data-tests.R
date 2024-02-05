@@ -11,7 +11,6 @@ library("tidyr")
 library("readr")
 # library("bgamcar1")
 library("mgcv")
-library("devtools")
 load_all()
 
 #------------------ test models ------------------
@@ -82,9 +81,18 @@ data_car1 <- withr::with_seed(seed, {
     )
 })
 
-data_car1_missing <- data_car1
-data_car1_missing$x_missing <- data_car1_missing$x
-data_car1_missing$x_missing[59] <- NA
+data_car1_missing <- data_car1 %>%
+  transmute(
+    time = x,
+    d_x,
+    x = withr::with_seed(seed, rnorm(length(data_car1$x))),
+    # censor x at -1:
+    x_cens = if_else(x < -1, "left", "none"),
+    x = pmax(x, -1),
+    y = x + y
+  )
+
+data_car1_missing$x[59] <- NA
 
 data_gam <- withr::with_seed(seed, mgcv::gamSim(1, n = 200, scale = 2))
 
@@ -138,8 +146,8 @@ fit_car1 <- fit_stan_model(
   overwrite = TRUE
 )
 
-form_car1_missing <- bf(y ~ mi(x_missing) + ar(time = x)) +
-  bf(x_missing | mi() ~ 1) +
+form_car1_missing <- bf(y ~ mi(x) + ar(time = time)) +
+  bf(x | mi() ~ 1, family = "gaussian") +
   set_rescor(FALSE)
 
 fit_car1_missing <- fit_stan_model(
@@ -151,7 +159,11 @@ fit_car1_missing <- fit_stan_model(
   save_warmup = FALSE,
   chains = 2,
   backend = "cmdstanr",
-  overwrite = TRUE
+  overwrite = TRUE,
+  var_car1 = "y",
+  var_xcens = "x",
+  cens_ind = "x_cens",
+  lcl = -1
 )
 
 fit_gam <- fit_stan_model(

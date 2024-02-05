@@ -1,5 +1,5 @@
 
-test_that("modify_stancode() adds expected number of characters to stan code.", {
+test_that("modify_stancode(modify = \"car1\") adds expected number of characters to stan code.", {
   inputs <- load_test_models()
   n1 <- stringr::str_count(inputs$fit$model)
   n1_mod <- modify_stancode(inputs$fit$model) %>%
@@ -14,7 +14,7 @@ test_that("modify_stancode() adds expected number of characters to stan code.", 
   expect_equal(d2, 73) # 73 chars overall
 })
 
-test_that("modify_stancode() modifies appropriate code snippets.", {
+test_that("modify_stancode(modify = \"car1\") modifies appropriate code snippets.", {
   inputs <- load_test_models()
   s1 <- brms::make_stancode(
     inputs$form_ar,
@@ -30,5 +30,30 @@ test_that("modify_stancode() modifies appropriate code snippets.", {
   expect_true(stringr::str_detect(s2, r1))
   expect_true(stringr::str_detect(s2, r2))
   expect_true(stringr::str_detect(s2, r3))
+})
 
+test_that("modify_stancode() works when both methods are used in sequence.", {
+  inputs <- load_test_models()
+  stancode_original <- inputs$fit_car1_missing$model
+  stancode_modified <- stancode_original %>%
+    modify_stancode(modify = "car1", var_car1 = "y") %>%
+    modify_stancode(modify = "xcens", var_xcens = "xmissing")
+  expect_message(
+    modify_stancode(stancode_original, modify = "xcens", var_xcens = "xmissing"),
+    regexp = "for multivariate models, remember to specify which response gets CAR\\(1\\) errors."
+  )
+  # left-censoring modifications:
+  modification_1 <- "Yl_xmissing\\[Jcens_xmissing\\] = Ycens_xmissing; // add imputed left-censored values"
+  modification_2 <- "vector<upper=U_xmissing>\\[Ncens_xmissing\\] Ycens_xmissing;  // estimated left-censored"
+  modification_3 <- "int<lower=1> Jcens_xmissing\\[Ncens_xmissing\\];  // positions of left-censored"
+  expect_false(stringr::str_detect(stancode_original, modification_1))
+  expect_true(stringr::str_detect(stancode_modified, modification_1))
+  expect_false(stringr::str_detect(stancode_original, modification_2))
+  expect_true(stringr::str_detect(stancode_modified, modification_2))
+  expect_false(stringr::str_detect(stancode_original, modification_3))
+  expect_true(stringr::str_detect(stancode_modified, modification_3))
+  # CAR(1) modifications:
+  modification_4 <- "mu_y\\[n\\] \\+= Err_y\\[n, 1\\] \\* pow\\(ar_y\\[1\\], s\\[n\\]\\); // CAR\\(1\\)"
+  expect_false(stringr::str_detect(stancode_original, modification_4))
+  expect_true(stringr::str_detect(stancode_modified, modification_4))
 })
