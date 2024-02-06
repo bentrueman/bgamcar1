@@ -21,6 +21,8 @@
 #' correspond to that of `lcl` and `cens_ind`.
 #' @param cens_ind A character vector containing the names of left-censoring indicators variables corresponding
 #' to the contents of `var_xcens`.
+#' @param stancode A named character vector of length one, where the name is the model block to modify
+#' and the value is the additional Stan code.
 #'
 #' @return A `brms` model object fitted with `rstan`.
 #' @importFrom stringr str_remove str_extract str_detect
@@ -59,6 +61,7 @@ fit_stan_model <- function(file,
                            var_xcens = NULL,
                            cens_ind = NULL,
                            lcl = NULL,
+                           stancode = NULL,
                            ...) {
 
   model_saved <- get_model(file)
@@ -110,6 +113,10 @@ fit_stan_model <- function(file,
 
   if (!is.null(var_xcens)) {
     code <- modify_stancode(code, modify = "xcens", var_xcens = var_xcens)
+  }
+
+  if (!is.null(stancode)) {
+    code <- add_stancode(code, stancode, block = names(stancode))
   }
 
   # fit model:
@@ -164,6 +171,7 @@ fit_stan_model <- function(file,
   # add stan model to fit slot:
   brmsmod$fit <- stanmod
   brmsmod <- rename_pars(brmsmod)
+  brmsmod$model <- code # replace the original Stan code with the modified code
 
   return(brmsmod)
 }

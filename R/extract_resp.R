@@ -27,10 +27,12 @@ extract_resp <- function(x) {
   stopifnot("'x' must be a brmsfit object" = class(x)[1] == "brmsfit")
   prep <- prepare_predictions(x)
   bterms <- brmsterms(x$formula)
-  response <- x$formula$resp
-  stopifnot(
-    "postprocessing methods do not currently support multivariate models" = length(response) == 1
-  )
+  response <- x$formula$form
+  response <- if (is.list(response)) {
+    stop("postprocessing methods do not currently support multivariate models")
+  } else {
+    all.vars(as.formula(response))[1]
+  }
   censoring_terms <- brms:::get_ad_vars(bterms, "cens")
   grouping_factor_sigma <- bterms$dpars$sigma$formula
   grouping_factor_sigma <- if (is.null(grouping_factor_sigma)) grouping_factor_sigma else

@@ -21,6 +21,7 @@ fit_stan_model(
   var_xcens = NULL,
   cens_ind = NULL,
   lcl = NULL,
+  stancode = NULL,
   ...
 )
 }
@@ -60,6 +61,9 @@ correspond to that of \code{lcl} and \code{cens_ind}.}
 to the contents of \code{var_xcens}.}
 
 \item{lcl}{A character vector of left censoring limits for predictor variables (\code{"left"} for left-censored, \code{"none"} for observed).}
+
+\item{stancode}{A named character vector of length one, where the name is the model block to modify
+and the value is the additional Stan code.}
 
 \item{...}{Passed on to \code{rstan::stan()}.}
 }

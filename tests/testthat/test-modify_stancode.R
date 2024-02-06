@@ -1,13 +1,20 @@
 
 test_that("modify_stancode(modify = \"car1\") adds expected number of characters to stan code.", {
   inputs <- load_test_models()
-  n1 <- stringr::str_count(inputs$fit$model)
-  n1_mod <- modify_stancode(inputs$fit$model) %>%
+  fit_stancode <- brms::make_stancode(
+    inputs$fit$formula, inputs$data, prior = inputs$fit$prior, family = "student"
+  )
+  n1 <- stringr::str_count(fit_stancode)
+  n1_mod <- modify_stancode(fit_stancode) %>%
     stringr::str_count()
   d1 <- n1_mod - n1
 
-  n2 <- stringr::str_count(inputs$fit_ar$model)
-  n2_mod <- modify_stancode(inputs$fit_ar$model) %>%
+  fit_ar_stancode <- brms::make_stancode(
+    inputs$fit_ar$formula, inputs$data_ar, prior = inputs$fit_ar$prior,
+    family = "student"
+  )
+  n2 <- stringr::str_count(fit_ar_stancode)
+  n2_mod <- modify_stancode(fit_ar_stancode) %>%
     stringr::str_count()
   d2 <- n2_mod - n2
   expect_equal(d1, 35) # 35 chars to data block
@@ -34,7 +41,7 @@ test_that("modify_stancode(modify = \"car1\") modifies appropriate code snippets
 
 test_that("modify_stancode() works when both methods are used in sequence.", {
   inputs <- load_test_models()
-  stancode_original <- inputs$fit_car1_missing$model
+  stancode_original <- brms::stancode(inputs$fit_car1_missing)
   stancode_modified <- stancode_original %>%
     modify_stancode(modify = "car1", var_car1 = "y") %>%
     modify_stancode(modify = "xcens", var_xcens = "xmissing")
