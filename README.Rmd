@@ -40,7 +40,6 @@ devtools::install_github("bentrueman/bgamcar1")
 Below is a quick demonstration of the main functions. First load the simulated data; all input variables are centered and scaled to unit variance (the response was log-transformed before scaling). The data-generating process sums a nonlinear multiyear trend, a seasonal trend with a peak in August, and CAR(1)-filtered Student-*t* errors. Censoring should be indicated using a character vector with the values "left", "right", "interval", and "none".
 
 ```{r simulate, message=FALSE}
-
 library("ggplot2")
 library("dplyr")
 library("brms")
@@ -57,7 +56,7 @@ Then fit the model:
 
 ```{r model}
 
-bform <- bf(
+model_formula <- bf(
   scaled_lead | cens(cens_lead) ~
   s(scaled_date_numeric, k = 10) +
     s(scaled_date_yday, bs = "cc", k = 10) +
@@ -65,7 +64,7 @@ bform <- bf(
 )
 
 fit <- fit_stan_model(
-  "man/models/demo", rseed, bform, simdat,
+  "man/models/demo", rseed, model_formula, simdat,
   save_warmup = FALSE, 
   iter_sampling = 2000,
   iter_warmup = 1000,
@@ -130,6 +129,41 @@ Finally, compare models using approximate leave-one-out cross-validation, using 
 loo_car1 <- loo_cv(simdat, fit)
 loo_gam <- loo_cv(simdat, fit, car1 = FALSE)
 loo::loo_compare(loo_car1, loo_gam)
+```
+
+## Left-censored predictors 
+
+The `bgamcar1` package fills a current gap in `brms` functionality by accommodating left-censored predictors. The approach is based on [this](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html) `brms` vignette and the [Stan manual](https://mc-stan.org/docs/2_18/stan-users-guide/censored-data.html) (see *Estimating Censored Values*). Post-processing functions in `brms` will not work with the output---since the likelihood has been modified---and those in `bgamcar1` do not work either (yet). The model predictions can be generated in R, though, or the `generated quantities` block can be used to reproduce the model predictions or the imputed variables via the `stancode` argument to `bgamcar1::fit_stan_model()`.
+
+```{r model-logistic, message=FALSE}
+
+simdat_logistic <- readr::read_csv("man/models/data-simulated-logistic.csv")
+
+model_formula_logistic <- bf(y ~ mi(x) + ar(time), family = "bernoulli") + 
+  bf(x | mi() ~ 1, family = "gaussian") + 
+  set_rescor(FALSE)
+
+model_priors <- c(
+  prior(normal(0, 2), class = b),
+  prior(normal(0.5, 1), class = ar, resp = y, lb = 0, ub = 1),
+  prior(normal(0, 1), class = sderr, resp = y, lb = 0)
+)
+
+fit_logistic <- fit_stan_model(
+  file = "man/models/demo-logistic",
+  seed = rseed,
+  bform = model_formula_logistic,
+  bdata = simdat_logistic, 
+  bpriors = model_priors,
+  d_x = simdat_logistic$d_time,
+  backend = "cmdstanr",
+  var_car1 = "y",
+  var_xcens = "x",
+  cens_ind = "x_cens",
+  lcl = -1,
+  save_warmup = FALSE
+)
+
 ```
 
 # References  

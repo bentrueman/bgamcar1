@@ -47,7 +47,6 @@ Censoring should be indicated using a character vector with the values
 “left”, “right”, “interval”, and “none”.
 
 ``` r
-
 library("ggplot2")
 library("dplyr")
 library("brms")
@@ -64,7 +63,7 @@ Then fit the model:
 
 ``` r
 
-bform <- bf(
+model_formula <- bf(
   scaled_lead | cens(cens_lead) ~
   s(scaled_date_numeric, k = 10) +
     s(scaled_date_yday, bs = "cc", k = 10) +
@@ -72,7 +71,7 @@ bform <- bf(
 )
 
 fit <- fit_stan_model(
-  "man/models/demo", rseed, bform, simdat,
+  "man/models/demo", rseed, model_formula, simdat,
   save_warmup = FALSE, 
   iter_sampling = 2000,
   iter_warmup = 1000,
@@ -150,6 +149,50 @@ loo::loo_compare(loo_car1, loo_gam)
 #>        elpd_diff se_diff
 #> model1   0.0       0.0  
 #> model2 -13.2       4.5
+```
+
+## Left-censored predictors
+
+The `bgamcar1` package fills a current gap in `brms` functionality by
+accommodating left-censored predictors. The approach is based on
+[this](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html)
+`brms` vignette and the [Stan
+manual](https://mc-stan.org/docs/2_18/stan-users-guide/censored-data.html)
+(see *Estimating Censored Values*). Post-processing functions in `brms`
+will not work with the output—since the likelihood has been modified—and
+those in `bgamcar1` do not work either (yet). The model predictions can
+be generated in R, though, or the `generated quantities` block can be
+used to reproduce the model predictions or the imputed variables via the
+`stancode` argument to `bgamcar1::fit_stan_model()`.
+
+``` r
+
+simdat_logistic <- readr::read_csv("man/models/data-simulated-logistic.csv")
+
+model_formula_logistic <- bf(y ~ mi(x) + ar(time), family = "bernoulli") + 
+  bf(x | mi() ~ 1, family = "gaussian") + 
+  set_rescor(FALSE)
+
+model_priors <- c(
+  prior(normal(0, 2), class = b),
+  prior(normal(0.5, 1), class = ar, resp = y, lb = 0, ub = 1),
+  prior(normal(0, 1), class = sderr, resp = y, lb = 0)
+)
+
+fit_logistic <- fit_stan_model(
+  file = "man/models/demo-logistic",
+  seed = rseed,
+  bform = model_formula_logistic,
+  bdata = simdat_logistic, 
+  bpriors = model_priors,
+  d_x = simdat_logistic$d_time,
+  backend = "cmdstanr",
+  var_car1 = "y",
+  var_xcens = "x",
+  cens_ind = "x_cens",
+  lcl = -1,
+  save_warmup = FALSE
+)
 ```
 
 # References

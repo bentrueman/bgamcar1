@@ -22,7 +22,7 @@
 #' @param cens_ind A character vector containing the names of left-censoring indicators variables corresponding
 #' to the contents of `var_xcens`.
 #' @param stancode A named character vector of length one, where the name is the model block to modify
-#' and the value is the additional Stan code.
+#' and the value is the additional Stan code. This has only been validated for the generated quantities block.
 #'
 #' @return A `brms` model object fitted with `rstan`.
 #' @importFrom stringr str_remove str_extract str_detect
