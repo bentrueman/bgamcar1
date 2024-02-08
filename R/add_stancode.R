@@ -18,7 +18,7 @@ add_stancode <- function(scode_raw, new_code, block) {
   scode <- str_replace(
     scode_raw,
     paste0("(", block," \\{\n(.|\n)*?)(?=\n\\})"),
-    paste(c("\\1", new_code), collapse = "")
+    paste(c("\\1\n  ", new_code), collapse = "")
   )
   class(scode) <- "brmsmodel"
   scode

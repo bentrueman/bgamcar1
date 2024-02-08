@@ -1,43 +1,37 @@
 
 
-test_that("add_pred_draws_car1() returns an error for incorrect 'type'", {
+test_that("add_pred_draws_car1() returns an error for incorrect 'type' and for a multivariate model", {
   inputs <- load_test_models()
   expect_error(
     add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, type = "wrong type"),
     regexp = "'type' must be either 'prediction' or 'epred'"
   )
-})
-
-test_that("add_pred_draws_car1() returns an error for multivariate model", {
-  inputs <- load_test_models()
   expect_error(
     add_pred_draws_car1(inputs$data_car1_missing, inputs$fit_car1_missing),
     regexp = "postprocessing methods do not currently support multivariate models"
   )
 })
 
-test_that("add_pred_draws_car1() yields the same predictions as fitted.brmsfit()", {
+test_that(
+  "add_pred_draws_car1() yields the same predictions as fitted.brmsfit() and tidybayes::add_epred_draws()", {
   inputs <- load_test_models()
   preds <- add_pred_draws_car1(
     input = inputs$data_ar, object = inputs$fit_ar,
-    car1 = FALSE, draw_ids = 2000
+    car1 = FALSE, draw_ids = 500
   )
   fitted_vals <- fitted(
     inputs$fit_ar, incl_autocor = FALSE,
-    robust = TRUE, draw_ids = 2000
+    robust = TRUE, draw_ids = 500
   ) |>
     tibble::as_tibble()
   expect_equal(preds$.epred, fitted_vals$Estimate)
   # also test that draw_ids = NULL works:
   preds_all <- add_pred_draws_car1(inputs$data, inputs$fit, car1 = FALSE)
   expect_equal(nrow(preds_all), nrow(inputs$data) * 3000)
-})
-
-test_that("add_pred_draws_car1() yields the same results as tidybayes::add_epred_draws() for a regular AR(1) fit.", {
-  inputs <- load_test_models()
+  # tidybayes:
   preds1 <- tidybayes::add_epred_draws(inputs$data_ar, inputs$fit_ar) |>
     compare_preds(.draw)
-  preds2 <- add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, draw_ids = 1:2000) |>
+  preds2 <- add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, draw_ids = 1:500) |>
     compare_preds(.draw = .index)
   expect_equal(preds1, preds2)
 })
@@ -63,7 +57,7 @@ test_that("add_pred_draws_car1() joins params correctly for nondistributional mo
 
 test_that("add_pred_draws_car1() joins params correctly for test distributional model.", {
   inputs <- load_test_models()
-  these_ids <- c(452, 1298)
+  these_ids <- c(452, 129)
   preds <- add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, draw_ids = these_ids, type = "prediction")
   draws <- as_draws_df(inputs$fit_ar, c("nu", "ar[1]")) |>
     tibble::as_tibble() |>
@@ -87,7 +81,6 @@ test_that("add_pred_draws_car1() joins params correctly for test distributional 
   expect_equal(sig1, sig2)
   expect_equal(nu1, nu2)
 })
-
 
 test_that(
   "add_pred_draws_car1() fits a CAR(1) model that accounts for the autocorrelation
@@ -138,7 +131,7 @@ test_that("add_pred_draws_car1() handles a missing response variable in the inpu
   inputs <- load_test_models()
   inputs_mod <- inputs$data_ar[, c("date", "series", "d_x")]
   expect_message(
-    add_pred_draws_car1(inputs_mod, inputs$fit_ar, draw_ids = 1:2000),
+    add_pred_draws_car1(inputs_mod, inputs$fit_ar, draw_ids = 1:500),
     regexp = "not found in input. Setting car1 = FALSE."
   )
 })

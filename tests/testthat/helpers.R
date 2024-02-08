@@ -394,7 +394,7 @@ help_calc_ll <- function(inputs) {
   # fit_ar
 
   ll_brm2 <- brms::log_lik(inputs$fit_ar)
-  ll_myfn_in2 <- add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, draw_ids = 1:2000) |>
+  ll_myfn_in2 <- add_pred_draws_car1(inputs$data_ar, inputs$fit_ar, draw_ids = 1:500) |>
     dplyr::ungroup()
   ll_myfn_in_test <- ll_myfn_in2
   ll_myfn2 <- ll_myfn_in2 |>
