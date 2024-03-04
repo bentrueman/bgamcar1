@@ -44,14 +44,14 @@ test_that("modify_stancode() works when both methods are used in sequence.", {
   stancode_original <- brms::stancode(inputs$fit_car1_missing)
   stancode_modified <- stancode_original %>%
     modify_stancode(modify = "car1", var_car1 = "y") %>%
-    modify_stancode(modify = "xcens", var_xcens = "xmissing")
+    modify_stancode(modify = "xcens", var_xcens = "xmissing", lower_bound = 0)
   expect_message(
-    modify_stancode(stancode_original, modify = "xcens", var_xcens = "xmissing"),
+    modify_stancode(stancode_original, modify = "xcens", var_xcens = "xmissing", lower_bound = 0),
     regexp = "for multivariate models, remember to specify which response gets CAR\\(1\\) errors."
   )
   # left-censoring modifications:
   modification_1 <- "Yl_xmissing\\[Jcens_xmissing\\] = Ycens_xmissing; // add imputed left-censored values"
-  modification_2 <- "vector<upper=U_xmissing>\\[Ncens_xmissing\\] Ycens_xmissing;  // estimated left-censored"
+  modification_2 <- "vector<lower=0, upper=U_xmissing>\\[Ncens_xmissing\\] Ycens_xmissing;  // estimated left-censored"
   modification_3 <- "int<lower=1> Jcens_xmissing\\[Ncens_xmissing\\];  // positions of left-censored"
   expect_false(stringr::str_detect(stancode_original, modification_1))
   expect_true(stringr::str_detect(stancode_modified, modification_1))

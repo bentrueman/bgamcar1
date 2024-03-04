@@ -11,7 +11,8 @@ modify_standata(sdata, data, lcl, var_xcens, cens_ind)
 
 \item{data}{A dataframe containing the model variables.}
 
-\item{lcl}{A character vector of left censoring limits for predictor variables (\code{"left"} for left-censored, \code{"none"} for observed).}
+\item{lcl}{A numeric vector of censoring limits for left-censored variables. Alternatively, a list of numeric vectors with censoring limits for
+each variable and observation; the order should correspond to that of \code{lcl} and \code{cens_ind}.}
 
 \item{var_xcens}{A character vector containing the names of predictor variables with left-censoring; the order should
 correspond to that of \code{lcl} and \code{cens_ind}.}

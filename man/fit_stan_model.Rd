@@ -21,6 +21,7 @@ fit_stan_model(
   var_xcens = NULL,
   cens_ind = NULL,
   lcl = NULL,
+  lower_bound = NULL,
   stancode = NULL,
   ...
 )
@@ -54,13 +55,17 @@ equal to zero at the first timestep. If \code{NULL} (the default), \code{d_x} is
 
 \item{var_car1}{For multivariate models, specify which variable to generate CAR(1) errors for.}
 
-\item{var_xcens}{A character vector containing the names of predictor variables with left-censoring; the order should
+\item{var_xcens}{A character vector containing the names of variables with left-censoring; the order should
 correspond to that of \code{lcl} and \code{cens_ind}.}
 
-\item{cens_ind}{A character vector containing the names of left-censoring indicators variables corresponding
-to the contents of \code{var_xcens}.}
+\item{cens_ind}{A character vector containing the names of left-censoring indicator variables corresponding
+to the contents of \code{var_xcens}. (Indicator variables should take the form of character vectors with \code{"left"} for left-censored and
+\code{"none"} for observed.)}
 
-\item{lcl}{A character vector of left censoring limits for predictor variables (\code{"left"} for left-censored, \code{"none"} for observed).}
+\item{lcl}{A numeric vector of censoring limits for left-censored variables. Alternatively, a list of numeric vectors with censoring limits for
+each variable and observation; the order should correspond to that of \code{lcl} and \code{cens_ind}.}
+
+\item{lower_bound}{An optional lower bound for left-censored parameters. The default is no lower bound.}
 
 \item{stancode}{A named character vector of length one, where the name is the model block to modify
 and the value is the additional Stan code. This has only been validated for the generated quantities block.}

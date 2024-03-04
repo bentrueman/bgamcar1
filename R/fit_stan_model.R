@@ -16,11 +16,14 @@
 #' @param backend Run Stan's algorithms using `rstan` or `cmdstanr`.
 #' @param overwrite Overwrite an exising model stored as CSVs? Defaults to `FALSE`.
 #' @param var_car1 For multivariate models, specify which variable to generate CAR(1) errors for.
-#' @param lcl A character vector of left censoring limits for predictor variables (`"left"` for left-censored, `"none"` for observed).
-#' @param var_xcens A character vector containing the names of predictor variables with left-censoring; the order should
+#' @param lcl A numeric vector of censoring limits for left-censored variables. Alternatively, a list of numeric vectors with censoring limits for
+#' each variable and observation; the order should correspond to that of `lcl` and `cens_ind`.
+#' @param lower_bound An optional lower bound for left-censored parameters. The default is no lower bound.
+#' @param var_xcens A character vector containing the names of variables with left-censoring; the order should
 #' correspond to that of `lcl` and `cens_ind`.
-#' @param cens_ind A character vector containing the names of left-censoring indicators variables corresponding
-#' to the contents of `var_xcens`.
+#' @param cens_ind A character vector containing the names of left-censoring indicator variables corresponding
+#' to the contents of `var_xcens`. (Indicator variables should take the form of character vectors with `"left"` for left-censored and
+#' `"none"` for observed.)
 #' @param stancode A named character vector of length one, where the name is the model block to modify
 #' and the value is the additional Stan code. This has only been validated for the generated quantities block.
 #'
@@ -61,6 +64,7 @@ fit_stan_model <- function(file,
                            var_xcens = NULL,
                            cens_ind = NULL,
                            lcl = NULL,
+                           lower_bound = NULL,
                            stancode = NULL,
                            ...) {
 
@@ -112,7 +116,7 @@ fit_stan_model <- function(file,
   }
 
   if (!is.null(var_xcens)) {
-    code <- modify_stancode(code, modify = "xcens", var_xcens = var_xcens)
+    code <- modify_stancode(code, modify = "xcens", var_xcens = var_xcens, lower_bound = lower_bound, lcl = lcl)
   }
 
   if (!is.null(stancode)) {
