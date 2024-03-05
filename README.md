@@ -179,6 +179,32 @@ model_priors <- c(
   prior(normal(0, 1), class = sderr, resp = y, lb = 0)
 )
 
+# pass "save_mu" to fit_stan_model() instead of using posterior_linpred():
+
+save_mu <- c(
+  "generated quantities" = 
+  "// vector combining observed and missing responses
+  vector[N_x] Yl_x_gq = Y_x;
+  // matrix storing lagged residuals
+  matrix[N_y, max_lag_y] Err_y_gq = rep_matrix(0, N_y, max_lag_y);
+  // initialize linear predictor term
+  vector[N_y] mu_y_gq = rep_vector(0.0, N_y);
+  Yl_x_gq[Jmi_x] = Ymi_x;
+  Yl_x_gq[Jcens_x] = Ycens_x; // add imputed left-censored values
+  mu_y_gq += Intercept_y + err_y;
+  for (n in 1:N_y) {
+    // add more terms to the linear predictor
+    mu_y_gq[n] += (bsp_y[1]) * Yl_x_gq[n];
+  }
+  // include ARMA terms
+  for (n in 1:N_y) {
+    for (i in 1:J_lag_y[n]) {
+      Err_y_gq[n + 1, i] = err_y[n + 1 - i];
+    }
+    mu_y_gq[n] += Err_y_gq[n, 1] * pow(ar_y[1], s[n]); // CAR(1)
+  }"
+)
+
 fit_logistic <- fit_stan_model(
   file = "man/models/demo-logistic",
   seed = rseed,
@@ -191,7 +217,8 @@ fit_logistic <- fit_stan_model(
   var_xcens = "x",
   cens_ind = "x_cens",
   lcl = -1,
-  save_warmup = FALSE
+  save_warmup = FALSE,
+  stancode = save_mu
 )
 ```
 
