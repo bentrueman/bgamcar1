@@ -121,20 +121,20 @@ form_ar <- bf(y ~ ar(time = date, gr = series), sigma ~ series)
 prior_ar <- prior(normal(0, 1), class = Intercept)
 generate_mu <- c(
   "generated quantities" =
-    "// matrix storing lagged residuals
-    matrix[N, max_lag] Err2 = rep_matrix(0, N, max_lag);
-    vector[N] err2;  // actual residuals
-    // initialize linear predictor term
-    vector[N] mu2 = rep_vector(0.0, N);
-    mu2 += Intercept;
-    // include ARMA terms
-    for (n in 1:N) {
-      err2[n] = Y[n] - mu2[n];
-      for (i in 1:J_lag[n]) {
-        Err2[n + 1, i] = err2[n + 1 - i];
-      }
-      mu2[n] += Err2[n, 1] * pow(ar[1], s[n]); // CAR(1)
-    }"
+  "// matrix storing lagged residuals
+  matrix[N, max_lag] Err2 = rep_matrix(0, N, max_lag);
+  vector[N] err2;  // actual residuals
+  // initialize linear predictor term
+  vector[N] mu2 = rep_vector(0.0, N);
+  mu2 += Intercept;
+  // include ARMA terms
+  for (n in 1:N) {
+    err2[n] = Y[n] - mu2[n];
+    for (i in 1:J_lag[n]) {
+      Err2[n + 1, i] = err2[n + 1 - i];
+    }
+    mu2[n] += Err2[n, 1] * pow(ar[1], s[n]); // CAR(1)
+  }"
 )
 
 fit_ar <- fit_stan_model(

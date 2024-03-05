@@ -138,3 +138,18 @@ test_that("fit_stan_model() handles vector and scalar upper bounds on left-censo
   lcl_limits
 })
 
+test_that("fit_stan_model() handles missings", {
+  skip()
+  data <- data.frame(y = c(rnorm(10), NA), time = 1:11, d_x = c(0, rep(1, 10)))
+  # only concerned about the error, not the warnings (remove suppressWarnings() to debug)
+  fit <- suppressWarnings(fit_stan_model(
+    file = tempfile(),
+    seed = 125,
+    # bform = y | mi() ~ ar(time), # this works
+    bform = y ~ ar(time),
+    bdata = data,
+    backend = "cmdstanr",
+    family = "gaussian"
+  ))
+})
+
