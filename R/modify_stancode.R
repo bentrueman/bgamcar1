@@ -72,7 +72,7 @@ modify_stancode_censored <- function(scode_raw, var_xcens, lower_bound, lcl) {
 
     # modifications to data block:
     n_cens <- glue("int<lower=0> Ncens_{var_xcens[i]};  // number of left-censored")
-    j_cens <- glue("int<lower=1> Jcens_{var_xcens[i]}[Ncens_{var_xcens[i]}];  // positions of left-censored")
+    j_cens <- glue("array[Ncens_{var_xcens[i]}] int<lower=1> Jcens_{var_xcens[i]};  // positions of left-censored")
     u <- if (is.list(lcl)) {
       glue("vector[Ncens_{var_xcens[i]}] U_{var_xcens[i]};  // left-censoring limit")
     } else {

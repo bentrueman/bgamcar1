@@ -52,7 +52,7 @@ test_that("modify_stancode() works when both methods are used in sequence.", {
   # left-censoring modifications:
   modification_1 <- "Yl_xmissing\\[Jcens_xmissing\\] = Ycens_xmissing; // add imputed left-censored values"
   modification_2 <- "vector<lower=0, upper=U_xmissing>\\[Ncens_xmissing\\] Ycens_xmissing;  // estimated left-censored"
-  modification_3 <- "int<lower=1> Jcens_xmissing\\[Ncens_xmissing\\];  // positions of left-censored"
+  modification_3 <- "array\\[Ncens_xmissing\\] int<lower=1> Jcens_xmissing;  // positions of left-censored"
   expect_false(stringr::str_detect(stancode_original, modification_1))
   expect_true(stringr::str_detect(stancode_modified, modification_1))
   expect_false(stringr::str_detect(stancode_original, modification_2))
