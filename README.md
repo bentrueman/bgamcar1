@@ -153,8 +153,8 @@ loo::loo_compare(loo_car1, loo_gam)
 
 ## Left-censored predictors
 
-The `bgamcar1` package fills a current gap in `brms` functionality by
-accommodating left-censored predictors. The approach is based on
+The `bgamcar1` package fills an additional gap in `brms` functionality
+by accommodating left-censored predictors. The approach is based on
 [this](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html)
 `brms` vignette and the [Stan
 manual](https://mc-stan.org/docs/2_18/stan-users-guide/censored-data.html)
