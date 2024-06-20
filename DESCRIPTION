@@ -8,7 +8,7 @@ Description: This package is intended to document the data analysis for an upcom
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports: 
     brms (>= 2.19.6),
     data.table,
@@ -33,5 +33,5 @@ Suggests:
     readr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Remotes:  
+Remotes: 
     paul-buerkner/brms

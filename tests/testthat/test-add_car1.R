@@ -21,3 +21,8 @@ test_that("add_car1() yields the same results as tidybayes::add_epred_draws() fo
     select(-`ar[1]`)
   expect_equal(inputs$tbl1$.epred, inputs$tbl2$.epred)
 })
+
+test_that("add_car1() works with d_x declared as a separate argument in fit_stan_model()", {
+  skip_on_ci()
+  expect_true(FALSE)
+})

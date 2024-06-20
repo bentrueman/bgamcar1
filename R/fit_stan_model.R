@@ -11,7 +11,7 @@
 #' @param knots Passed on to `brms::brm()`.
 #' @param d_x A vector representing the spacing in time of observations in each series,
 #' equal to zero at the first timestep. If `NULL` (the default), `d_x` is drawn from the dataframe `bdata`.
-#' @param ... Passed on to `rstan::stan()`.
+#' @param ... Passed on to `rstan::stan()` or `cmdstanr::sample()`, depending on the backend selected.
 #' @param family A `brmsfamily` object. Note that some post-processing functions assume a student-t likelihood.
 #' @param backend Run Stan's algorithms using `rstan` or `cmdstanr`.
 #' @param overwrite Overwrite an exising model stored as CSVs? Defaults to `FALSE`.
@@ -27,9 +27,9 @@
 #' @param stancode A named character vector of length one, where the name is the model block to modify
 #' and the value is the additional Stan code. This has only been validated for the generated quantities block.
 #'
-#' @return A `brms` model object fitted with `rstan`.
+#' @return A `brms` model object fitted with `rstan` or `cmdstanr`.
 #' @importFrom stringr str_remove str_extract str_detect
-#' @importFrom brms brm rename_pars make_stancode make_standata student is.brmsfit
+#' @importFrom brms brm rename_pars make_stancode make_standata student is.brmsfit read_csv_as_stanfit
 #' @importFrom rstan stan read_stan_csv
 #' @importFrom dplyr %>%
 #' @export
@@ -126,7 +126,8 @@ fit_stan_model <- function(file,
   # fit model:
 
   stanmod <- if (length(model_saved$csvs) > 0 && !overwrite) {
-    rstan::read_stan_csv(model_saved$csvs)
+    if (backend == "rstan") rstan::read_stan_csv(model_saved$csvs) else
+      if (backend == "cmdstanr") brms::read_csv_as_stanfit(model_saved$csvs)
   } else if (backend == "rstan") {
     rstan::stan(
       model_code = code,
@@ -204,5 +205,6 @@ fit_cmdstan_model <- function(code, data, seed, path, basename, file, ...) {
     random = FALSE,
     timestamp = FALSE
   )
-  rstan::read_stan_csv(model$output_files())
+  # rstan::read_stan_csv(model$output_files())
+  brms::read_csv_as_stanfit(model$output_files())
 }
