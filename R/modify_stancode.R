@@ -85,7 +85,7 @@ modify_stancode_censored <- function(scode_raw, var_xcens, lower_bound, lcl) {
     # modifications to parameters block:
     y_cens <- glue("vector<upper=U_{var_xcens[i]}>[Ncens_{var_xcens[i]}] Ycens_{var_xcens[i]};  // estimated left-censored")
     if (!is.null(lower_bound)) {
-      y_cens <- str_replace(y_cens, "^vector<", glue("vector<lower={lower_bound[i]}, "))
+      if (!is.na(lower_bound[i])) y_cens <- str_replace(y_cens, "^vector<", glue("vector<lower={lower_bound[i]}, "))
     }
     # modifications to model block:
     yl <- glue("Yl_{var_xcens[i]}[Jcens_{var_xcens[i]}] = Ycens_{var_xcens[i]}; // add imputed left-censored values")
