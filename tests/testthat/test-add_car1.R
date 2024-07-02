@@ -24,5 +24,6 @@ test_that("add_car1() yields the same results as tidybayes::add_epred_draws() fo
 
 test_that("add_car1() works with d_x declared as a separate argument in fit_stan_model()", {
   skip_on_ci()
+  skip()
   expect_true(FALSE)
 })

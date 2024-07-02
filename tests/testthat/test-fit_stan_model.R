@@ -89,7 +89,7 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
 })
 
 test_that("fit_stan_model() handles vector and scalar upper bounds on left-censored variables", {
-  skip()
+  skip() # this is currently an empty test
   multivariate_formula <- brms::bf(y ~ mi(x)) +
     brms::bf(x | mi() ~ 1) +
     brms::set_rescor(FALSE)
@@ -139,7 +139,7 @@ test_that("fit_stan_model() handles vector and scalar upper bounds on left-censo
 })
 
 test_that("fit_stan_model() handles missings", {
-  skip()
+  skip() # currently an empty test
   data <- data.frame(y = c(rnorm(10), NA), time = 1:11, d_x = c(0, rep(1, 10)))
   # only concerned about the error, not the warnings (remove suppressWarnings() to debug)
   fit <- suppressWarnings(fit_stan_model(
