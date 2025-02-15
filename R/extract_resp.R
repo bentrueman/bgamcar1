@@ -37,11 +37,11 @@ extract_resp <- function(x) {
   grouping_factor_sigma <- bterms$dpars$sigma$formula
   grouping_factor_sigma <- if (is.null(grouping_factor_sigma)) grouping_factor_sigma else
     labels(terms(as.formula(grouping_factor_sigma)))
-  grouping_factor_ar <- prep$dpars$mu$ac$acef$gr
+  grouping_factor_ar <- prep$dpars$mu$ac$acframe[, "gr"]
   # convert "NA" to NA_character_:
   grouping_factor_ar <- if (is.null(grouping_factor_ar)) grouping_factor_ar else
     if (grouping_factor_ar == "NA") NA_character_ else grouping_factor_ar
-  time_variable_ar <- prep$dpars$mu$ac$acef$time
+  time_variable_ar <- prep$dpars$mu$ac$acframe[, "time"]
   list(
     "resp" = response,
     "cens" = censoring_terms[1],
