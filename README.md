@@ -5,12 +5,12 @@
 
 <!-- badges: start -->
 
-[![Codecov test
-coverage](https://codecov.io/gh/bentrueman/bgamcar1/branch/master/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/bgamcar1?branch=master)
 [![DOI](https://zenodo.org/badge/479471503.svg)](https://zenodo.org/badge/latestdoi/479471503)
 [![R-CMD-check](https://github.com/bentrueman/bgamcar1/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bentrueman/bgamcar1/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test
+coverage](https://codecov.io/gh/bentrueman/bgamcar1/graph/badge.svg)](https://app.codecov.io/gh/bentrueman/bgamcar1)
 <!-- badges: end -->
 
 The `bgamcar1` package documents the bespoke functions used in the paper
