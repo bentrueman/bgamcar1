@@ -175,7 +175,7 @@ fit_car1_missing <- fit_stan_model(
   seed,
   form_car1_missing,
   data_car1_missing,
-  prior_ar,
+  # prior_ar,
   save_warmup = FALSE,
   chains = 2,
   backend = "cmdstanr",

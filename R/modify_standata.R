@@ -35,12 +35,11 @@ modify_standata <- function(sdata, data, lcl, var_xcens, cens_ind) {
     # make logical censoring indicator:
     cens_logical <- data[[cens_ind[i]]] == "left"
 
-    if (sum(cens_logical) > 0) { # append to standata list only if there are left-censored values
-      sdata[[paste0("Ncens_", varstan[i])]] <- sum(cens_logical) # number of left-censored
-      # positions of left-censored:
-      sdata[[paste0("Jcens_", varstan[i])]] <- as.array(seq_len(nrow(data))[cens_logical])
-      sdata[[paste0("U_", varstan[i])]] <- lcl[[i]] # left-censoring limit
-    } else message(glue("No left-censored {var} values."))
+    sdata[[paste0("Ncens_", varstan[i])]] <- sum(cens_logical) # number of left-censored
+    # positions of left-censored:
+    sdata[[paste0("Jcens_", varstan[i])]] <- as.array(seq_len(nrow(data))[cens_logical])
+    sdata[[paste0("U_", varstan[i])]] <- lcl[[i]] # left-censoring limit
+    if (sum(cens_logical) == 0) message(glue("No left-censored {var_xcens} values."))
   }
 
   sdata

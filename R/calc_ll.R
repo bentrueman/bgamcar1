@@ -25,7 +25,8 @@
 #'    prior(normal(0, 1), class = Intercept),
 #'    car1 = FALSE,
 #'    save_warmup = FALSE,
-#'    chains = 3
+#'    chains = 3,
+#'    backend = "cmdstanr"
 #'  )
 #'  ll_in <- add_pred_draws_car1(data, fit, draw_ids = 1:10, car1 = FALSE)
 #'  calc_ll(ll_in, "y", "y2", "ycens")

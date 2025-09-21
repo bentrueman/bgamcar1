@@ -23,7 +23,8 @@
 #'    prior(normal(0, 1), class = Intercept),
 #'    car1 = FALSE,
 #'    save_warmup = FALSE,
-#'    chains = 3
+#'    chains = 3,
+#'    backend = "cmdstanr"
 #'  )
 #'  loo_cv(data, fit, draw_ids = 1:3000, car1 = FALSE)
 loo_cv <- function(input, object, censoring = TRUE, ...) {

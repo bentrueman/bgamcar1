@@ -64,7 +64,8 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
         inputs$data_car1,
         inputs$prior_ar,
         save_warmup = FALSE,
-        chains = 2
+        chains = 2,
+        backend = "cmdstanr"
       )
     ),
     regexp = "column d_x not found in data"
@@ -79,13 +80,35 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
     inputs$prior_ar,
     save_warmup = FALSE,
     chains = 2,
-    d_x = s
+    d_x = s,
+    backend = "cmdstanr"
   )
 
   expect_equal(
     posterior::summarise_draws(brms::as_draws_df(fit_car1_d_x, "ar[1]"))$median,
     inputs$phi_car1, tolerance = 5e-2
   )
+})
+
+test_that("fit_stan_model() handles left-censored variables without censored values", {
+  data <- data.frame(x = rnorm(50))
+  data$y <- 5 * data$x + rnorm(50)
+  data$x_cens <- "none"
+  model <- fit_stan_model(
+    file = tempfile(),
+    seed = 125,
+    bform = y ~ x,
+    bdata = data,
+    backend = "cmdstanr",
+    car1 = FALSE,
+    var_xcens = "x",
+    cens_ind = "x_cens",
+    lcl = -1e3,
+    save_warmup = FALSE,
+    lower_bound = -2e3,
+    family = "gaussian"
+  )
+  expect_true(class(model) == "brmsfit")
 })
 
 test_that("fit_stan_model() handles vector and scalar upper bounds on left-censored variables", {

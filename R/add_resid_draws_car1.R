@@ -21,7 +21,8 @@
 #'    prior(normal(0, 1), class = Intercept),
 #'    car1 = FALSE,
 #'    save_warmup = FALSE,
-#'    chains = 3
+#'    chains = 3,
+#'    backend = "cmdstanr"
 #'  )
 #' add_resid_draws_car1(data, fit, yvar = y, car1 = FALSE, draw_ids = 1234)
 add_resid_draws_car1 <- function(input, object, yvar, ...) {

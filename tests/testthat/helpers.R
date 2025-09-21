@@ -20,7 +20,8 @@ load_test_models <- function() {
     brms::prior(normal(0, 1), class = Intercept),
     car1 = FALSE,
     save_warmup = FALSE,
-    chains = 3
+    chains = 3,
+    backend = "cmdstanr"
   )
 
   form_ar <- brms::bf(y ~ ar(time = date, gr = series), sigma ~ series)
@@ -33,7 +34,8 @@ load_test_models <- function() {
     data_ar,
     prior_ar,
     save_warmup = FALSE,
-    chains = 2
+    chains = 2,
+    backend = "cmdstanr"
   )
 
   form_car1 <- brms::bf(y ~ ar(time = x))
@@ -46,7 +48,8 @@ load_test_models <- function() {
     data_car1,
     prior_ar,
     save_warmup = FALSE,
-    chains = 2
+    chains = 2,
+    backend = "cmdstanr"
   )
 
   form_car1_missing <- brms::bf(y ~ mi(x) + ar(time = time)) +
@@ -58,9 +61,10 @@ load_test_models <- function() {
     seed,
     form_car1_missing,
     data_car1_missing,
-    prior_ar,
+    #prior_ar,
     save_warmup = FALSE,
-    chains = 2
+    chains = 2,
+    backend = "cmdstanr"
   )
 
   list(
@@ -99,7 +103,8 @@ load_test_gams <- function() {
     brms::bf(y ~ s(x0) + s(x1) + s(x2) + s(x3)),
     data_gam,
     car1 = FALSE,
-    chains = 2
+    chains = 2,
+    backend = "cmdstanr"
   )
 
   fit_gam2 <- fit_stan_model(
@@ -109,7 +114,8 @@ load_test_gams <- function() {
     data_gam2,
     save_warmup = FALSE,
     car1 = FALSE,
-    chains = 2
+    chains = 2,
+    backend = "cmdstanr"
   )
 
   fit_gam3 <- fit_stan_model(
@@ -119,7 +125,8 @@ load_test_gams <- function() {
     data_gam2,
     save_warmup = FALSE,
     car1 = FALSE,
-    chains = 2
+    chains = 2,
+    backend = "cmdstanr"
   )
 
   list(
@@ -454,19 +461,19 @@ help_summarize_preds <- function() {
 
   x_sum2 <- withr::with_seed(1246, {
     data_sumpred |>
-      ungroup() |>
-      slice_sample(prop = .75) |>
-      group_by(g, y)
+      dplyr::ungroup() |>
+      dplyr::slice_sample(prop = .75) |>
+      dplyr::group_by(g, y)
   })
 
   s1 <- x_sum2 |>
     summarize_preds(y_var = y) |>
-    filter(!near(y, .epred_retrans)) |>
+    dplyr::filter(!dplyr::near(y, .epred_retrans)) |>
     nrow()
 
   s2 <- x_sum2|>
     summarize_preds(y_var = data_sumpred$y) |>
-    filter(!near(y, .epred_retrans)) |>
+    dplyr::filter(!dplyr::near(y, .epred_retrans)) |>
     nrow()
 
   list(

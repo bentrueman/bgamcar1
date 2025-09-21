@@ -26,7 +26,8 @@
 #'    prior(normal(0, 1), class = Intercept),
 #'    car1 = FALSE,
 #'    save_warmup = FALSE,
-#'    chains = 3
+#'    chains = 3,
+#'    backend = "cmdstanr"
 #'  )
 #' preds <- add_pred_draws_car1(data, fit, car1 = FALSE, draw_ids = 1234)
 #' summarize_preds(preds, y_var = y, log = FALSE)
