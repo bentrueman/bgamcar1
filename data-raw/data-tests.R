@@ -148,8 +148,8 @@ fit_ar <- fit_stan_model(
   iter_sampling = 500,
   backend = "cmdstanr",
   overwrite = TRUE,
-  stancode = generate_mu,
-  sig_figs = 18
+  sig_figs = 18,
+  stancode = generate_mu
 )
 
 form_car1 <- bf(y ~ ar(time = x))

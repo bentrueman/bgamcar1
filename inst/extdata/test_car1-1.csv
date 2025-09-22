@@ -2,7 +2,7 @@
 # stan_version_minor = 37
 # stan_version_patch = 0
 # model = model_3f6822a9894ce5944464e6c9e59f2014_model
-# start_datetime = 2025-09-21 12:03:18 UTC
+# start_datetime = 2025-09-22 09:07:12 UTC
 # method = sample (Default)
 #   sample
 #     num_samples = 1000 (Default)
@@ -31,16 +31,16 @@
 #     num_chains = 1 (Default)
 # id = 1 (Default)
 # data
-#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp33oj8d/standata-479a4f55288e.json
+#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp1yHxqP/standata-974712db8f98.json
 # init = 2 (Default)
 # random
 #   seed = 1
 # output
-#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp33oj8d/model_3f6822a9894ce5944464e6c9e59f2014-202509210903-1-871232.csv
+#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp1yHxqP/model_3f6822a9894ce5944464e6c9e59f2014-202509220607-1-1e5d68.csv
 #   diagnostic_file =  (Default)
 #   refresh = 100 (Default)
 #   sig_figs = 8 (Default)
-#   profile_file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp33oj8d/model_3f6822a9894ce5944464e6c9e59f2014-profile-202509210903-1-979e8d.csv
+#   profile_file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp1yHxqP/model_3f6822a9894ce5944464e6c9e59f2014-profile-202509220607-1-227d5d.csv
 #   save_cmdstan_config = false (Default)
 # num_threads = 1 (Default)
 # stanc_version = stanc3 v2.37.0

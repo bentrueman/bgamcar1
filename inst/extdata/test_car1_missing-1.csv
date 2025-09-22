@@ -2,7 +2,7 @@
 # stan_version_minor = 37
 # stan_version_patch = 0
 # model = model_0507de0bb5fd158df835d750ced450d9_model
-# start_datetime = 2025-09-21 12:03:25 UTC
+# start_datetime = 2025-09-22 09:07:19 UTC
 # method = sample (Default)
 #   sample
 #     num_samples = 1000 (Default)
@@ -31,16 +31,16 @@
 #     num_chains = 1 (Default)
 # id = 1 (Default)
 # data
-#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp33oj8d/standata-479a3fc58d3e.json
+#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp1yHxqP/standata-97475dbbe7b2.json
 # init = 2 (Default)
 # random
 #   seed = 1
 # output
-#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp33oj8d/model_0507de0bb5fd158df835d750ced450d9-202509210903-1-6eee3d.csv
+#   file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp1yHxqP/model_0507de0bb5fd158df835d750ced450d9-202509220607-1-6d6aa4.csv
 #   diagnostic_file =  (Default)
 #   refresh = 100 (Default)
 #   sig_figs = 8 (Default)
-#   profile_file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp33oj8d/model_0507de0bb5fd158df835d750ced450d9-profile-202509210903-1-727d3b.csv
+#   profile_file = /var/folders/lr/pmtbnslj58jcp6q9k1c_t8_r0000gn/T/Rtmp1yHxqP/model_0507de0bb5fd158df835d750ced450d9-profile-202509220607-1-477fca.csv
 #   save_cmdstan_config = false (Default)
 # num_threads = 1 (Default)
 # stanc_version = stanc3 v2.37.0
@@ -1051,7 +1051,7 @@ lp__,accept_stat__,stepsize__,treedepth__,n_leapfrog__,divergent__,energy__,Inte
 -345.92866,0.98868937,0.25749188,4,15,0,353.51872,0.15500112,0.59150502,0.45111172,0.95762817,24.93336,-0.11668366,0.10420039,0.86928589,-1.9083923,-1.3244952,-1.3761639,-1.8937957,-1.2169334,-1.6255763,-1.5107986,-1.2976754,-1.112747,-1.9236673,-1.1622917,-10.337956,0.15500112,0.10420039
 -347.19388,0.99102959,0.25749188,4,15,0,352.88835,0.25630902,0.68427737,0.52534221,0.98605805,20.022014,1.6361468,0.13345441,0.85928552,-1.1127494,-1.1108126,-1.9202581,-1.3107796,-1.1201858,-1.0809595,-1.3202857,-1.2290859,-1.2186242,-1.0670741,-1.1751755,-10.068738,0.25630902,0.13345441
 # 
-#  Elapsed Time: 0.221 seconds (Warm-up)
-#                0.177 seconds (Sampling)
-#                0.398 seconds (Total)
+#  Elapsed Time: 0.224 seconds (Warm-up)
+#                0.179 seconds (Sampling)
+#                0.403 seconds (Total)
 # 
