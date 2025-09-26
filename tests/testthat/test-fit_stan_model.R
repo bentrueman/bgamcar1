@@ -11,9 +11,6 @@ test_that("fit_stan_model() loads the correct model and recovers params", {
 })
 
 test_that("fit_stan_model() calls rstan correctly.", {
-  # this test passes locally, but fails on GHA with the following error:
-  # "Boost not found; call install.packages('BH')"
-  # skip_on_ci()
   filepath <- paste0(system.file("extdata", package = "bgamcar1"), "/model")
   data <- tibble::tibble(y = rnorm(10))
   testmod <- fit_stan_model(
@@ -64,8 +61,8 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
         inputs$data_car1,
         inputs$prior_ar,
         save_warmup = FALSE,
-        chains = 2,
-        backend = "cmdstanr"
+        chains = 2
+        # backend = "cmdstanr"
       )
     ),
     regexp = "column d_x not found in data"
@@ -80,8 +77,8 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
     inputs$prior_ar,
     save_warmup = FALSE,
     chains = 2,
-    d_x = s,
-    backend = "cmdstanr"
+    d_x = s
+    # backend = "cmdstanr"
   )
 
   expect_equal(
@@ -99,7 +96,7 @@ test_that("fit_stan_model() handles left-censored variables without censored val
     seed = 125,
     bform = y ~ x,
     bdata = data,
-    backend = "cmdstanr",
+    # backend = "cmdstanr",
     car1 = FALSE,
     var_xcens = "x",
     cens_ind = "x_cens",
@@ -112,7 +109,6 @@ test_that("fit_stan_model() handles left-censored variables without censored val
 })
 
 test_that("fit_stan_model() handles vector and scalar upper bounds on left-censored variables", {
-  skip() # this is currently an empty test
   multivariate_formula <- brms::bf(y ~ mi(x)) +
     brms::bf(x | mi() ~ 1) +
     brms::set_rescor(FALSE)
@@ -126,7 +122,7 @@ test_that("fit_stan_model() handles vector and scalar upper bounds on left-censo
     seed = 125,
     bform = multivariate_formula,
     bdata = data,
-    backend = "cmdstanr",
+    # backend = "cmdstanr",
     car1 = FALSE,
     var_xcens = "x",
     cens_ind = "x_cens",
@@ -141,7 +137,7 @@ test_that("fit_stan_model() handles vector and scalar upper bounds on left-censo
     seed = 125,
     bform = multivariate_formula,
     bdata = data,
-    backend = "cmdstanr",
+    # backend = "cmdstanr",
     car1 = FALSE,
     var_xcens = "x",
     cens_ind = "x_cens",
@@ -151,14 +147,21 @@ test_that("fit_stan_model() handles vector and scalar upper bounds on left-censo
     family = "gaussian"
   )
   draws_single <- brms::as_draws_df(fit_single_lcl)
-  draws_single |>
-    select(starts_with("Ycens_")) |>
-    dplyr::reframe(across(everything(), range))
+  draws_single_vec <- draws_single |>
+    dplyr::select(tidyselect::starts_with("Ycens_")) |>
+    dplyr::reframe(dplyr::across(tidyselect::everything(), range)) |>
+    dplyr::slice(2) |>
+    t() |>
+    as.numeric()
+  expect_true(all(draws_single_vec < -1))
   draws_multiple <- brms::as_draws_df(fit_multiple_lcl)
-  draws_multiple |>
-    select(starts_with("Ycens_")) |>
-    dplyr::reframe(across(everything(), range))
-  lcl_limits
+  draws_multiple_vec <- draws_multiple |>
+    dplyr::select(tidyselect::starts_with("Ycens_")) |>
+    dplyr::reframe(dplyr::across(tidyselect::everything(), range)) |>
+    dplyr::slice(2) |>
+    t() |>
+    as.numeric()
+  expect_true(all(draws_multiple_vec < lcl_limits[[1]]))
 })
 
 test_that("fit_stan_model() handles missings", {
