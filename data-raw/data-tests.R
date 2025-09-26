@@ -1,7 +1,18 @@
 
+# notes -------------------------------------------------------------------
+
 # generate datasets/models for tests:
 
 # n.b., a dummy file "badtest_1.csv" has been added to inst/extdata to test that fit_stan_model() ignores it
+
+# setup -------------------------------------------------------------------
+
+# running models using cmdstan 2.34 so that rstan can read the CSVs.
+
+cmdstanr::set_cmdstan_path(file.path(dirname(cmdstanr::cmdstan_path()), 'cmdstan-2.34.0'))
+cmdstanr::cmdstan_version()
+
+# libraries ---------------------------------------------------------------
 
 library("brms")
 library("withr")

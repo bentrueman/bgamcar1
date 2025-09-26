@@ -27,8 +27,7 @@ fit <- fit_stan_model(
    prior(normal(0, 1), class = Intercept),
    car1 = FALSE,
    save_warmup = FALSE,
-   chains = 3,
-   backend = "cmdstanr"
+   chains = 3
  )
 extract_resp(fit)
 }
