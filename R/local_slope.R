@@ -29,8 +29,7 @@
 #'   bf(y ~ s(x0) + s(x1) + s(x2) + s(x3)),
 #'   data_gam,
 #'   car1 = FALSE,
-#'   chains = 2,
-#'   backend = "cmdstanr"
+#'   chains = 2
 #' )
 #' local_slope(data_gam, fit, "x2", smooth = "s(x2)")
 #'

@@ -11,9 +11,6 @@ test_that("fit_stan_model() loads the correct model and recovers params", {
 })
 
 test_that("fit_stan_model() calls rstan correctly.", {
-  # this test passes locally, but fails on GHA with the following error:
-  # "Boost not found; call install.packages('BH')"
-  # skip_on_ci()
   filepath <- paste0(system.file("extdata", package = "bgamcar1"), "/model")
   data <- tibble::tibble(y = rnorm(10))
   testmod <- fit_stan_model(
@@ -64,8 +61,8 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
         inputs$data_car1,
         inputs$prior_ar,
         save_warmup = FALSE,
-        chains = 2,
-        backend = "cmdstanr"
+        chains = 2
+        # backend = "cmdstanr"
       )
     ),
     regexp = "column d_x not found in data"
@@ -80,8 +77,8 @@ test_that("fit_stan_model() returns an error if d_x argument is missing", {
     inputs$prior_ar,
     save_warmup = FALSE,
     chains = 2,
-    d_x = s,
-    backend = "cmdstanr"
+    d_x = s
+    # backend = "cmdstanr"
   )
 
   expect_equal(
@@ -99,7 +96,7 @@ test_that("fit_stan_model() handles left-censored variables without censored val
     seed = 125,
     bform = y ~ x,
     bdata = data,
-    backend = "cmdstanr",
+    # backend = "cmdstanr",
     car1 = FALSE,
     var_xcens = "x",
     cens_ind = "x_cens",

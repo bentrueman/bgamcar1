@@ -23,8 +23,7 @@
 #'    prior(normal(0, 1), class = Intercept),
 #'    car1 = FALSE,
 #'    save_warmup = FALSE,
-#'    chains = 3,
-#'    backend = "cmdstanr"
+#'    chains = 3
 #'  )
 #'  extract_params(fit, car1 = FALSE, draw_ids = 1)
 extract_params <- function(object, car1 = TRUE, draw_ids = NULL) {
