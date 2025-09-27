@@ -22,8 +22,9 @@ in a separate [repository](https://github.com/bentrueman/compare-cct).
 continuous-time first-order autoregressive (CAR(1), Pinheiro et al.,
 2021) errors, Student *t* likelihoods, and (optional) censoring. The
 functions are wrappers around or alternatives to existing `brms`
-functions (Bürkner, 2017, 2018), addressing a [current
-gap](https://github.com/paul-buerkner/brms/issues/741) in the models
+functions (Bürkner, 2017, 2018), addressing two current gaps
+([here](https://github.com/paul-buerkner/brms/issues/741) and
+[here](https://github.com/paul-buerkner/brms/issues/565)) in the models
 `brms` can fit.
 
 ## Installation
@@ -32,8 +33,8 @@ You can install the development version of bgamcar1 from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("bentrueman/bgamcar1")
+# install.packages("remotes")
+remotes::install_github("bentrueman/bgamcar1")
 ```
 
 ## Example
@@ -174,7 +175,7 @@ model_formula_logistic <- bf(y ~ mi(x) + ar(time), family = "bernoulli") +
   set_rescor(FALSE)
 
 model_priors <- c(
-  prior(normal(0, 2), class = b),
+  prior(normal(0, 2), class = b, resp = y),
   prior(normal(0.5, 1), class = ar, resp = y, lb = 0, ub = 1),
   prior(normal(0, 1), class = sderr, resp = y, lb = 0)
 )
@@ -210,7 +211,7 @@ fit_logistic <- fit_stan_model(
   seed = rseed,
   bform = model_formula_logistic,
   bdata = simdat_logistic, 
-  bpriors = model_priors,
+  # bpriors = model_priors,
   d_x = simdat_logistic$d_time,
   backend = "cmdstanr",
   var_car1 = "y",
