@@ -95,7 +95,7 @@ fit_stan_model <- function(file,
   # modify standata:
 
   if (!is.null(var_xcens)) {
-    data <- modify_standata(data, bdata, lcl, var_xcens = var_xcens, cens_ind = cens_ind)
+    data <- modify_standata(data, bdata, lcl, lower_bound, var_xcens = var_xcens, cens_ind = cens_ind)
   }
 
   # generate stan code:
@@ -116,7 +116,7 @@ fit_stan_model <- function(file,
   }
 
   if (!is.null(var_xcens)) {
-    code <- modify_stancode(code, modify = "xcens", var_xcens = var_xcens, lower_bound = lower_bound, lcl = lcl)
+    code <- modify_stancode(code, modify = "xcens", var_xcens = var_xcens, lower_bound = lower_bound, lcl = lcl, car1 = car1)
   }
 
   if (!is.null(stancode)) {

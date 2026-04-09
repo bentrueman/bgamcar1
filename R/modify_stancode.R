@@ -8,9 +8,11 @@
 #' which creates the CAR(1) error term.
 #' @param var_xcens For multivariate models, specify the names of censored predictor variables as a character vector.
 #' @param var_car1 For multivariate models, specify which variable to generate CAR(1) errors for.
-#' @param lower_bound An optional lower bound for left-censored parameters. The default is no lower bound.
+#' @param lower_bound A scalar lower bound for left-censored variables. Alternatively, a numeric vector of lower bounds for left-censored variables. Alternatively, a list of numeric vectors with lower bounds for
+#' each variable and observation; the order should correspond to that of `lcl`, `var_xcens`, and `cens_ind`.
 #' @param lcl A numeric vector of censoring limits for left-censored variables. Alternatively, a list of numeric vectors with censoring limits for
-#' each variable and observation; the order should correspond to that of `lcl` and `cens_ind`.
+#' each variable and observation; the order should correspond to that of `var_xcens` and `cens_ind`.
+#' @param car1 Logical. Fit a CAR(1) error model?
 #'
 #' @return A Stan program of class `brmsmodel`.
 #' @importFrom stringr str_replace str_remove_all
@@ -22,10 +24,9 @@
 #' data <- read.csv(paste0(system.file("extdata", package = "bgamcar1"), "/data_car1.csv"))
 #' scode <- make_stancode(bf(y ~ ar(time = x)), data)
 #' modify_stancode(scode)
-modify_stancode <- function(scode_raw, modify = "car1", var_xcens = NULL, var_car1 = NULL, lower_bound = NULL, lcl = NULL) {
-  if (!is.null(var_xcens) && is.null(var_car1))
+modify_stancode <- function(scode_raw, modify = "car1", var_xcens = NULL, var_car1 = NULL, lower_bound = NULL, lcl = NULL, car1 = TRUE) {
+  if (!is.null(var_xcens) && is.null(var_car1) && isTRUE(car1))
     message("for multivariate models, remember to specify which response gets CAR(1) errors.")
-  if (!(is.numeric(lower_bound) | is.null(lower_bound))) stop("'lower_bound' must be numeric")
   if (modify == "car1") scode <- modify_stancode_car1(scode_raw, var_car1) # CAR1 error
   if (modify == "xcens") scode <- modify_stancode_censored(scode_raw, var_xcens, lower_bound, lcl) # left-censored predictors
   scode
@@ -61,19 +62,20 @@ modify_stancode_car1 <- function(scode_raw, var_car1) {
 }
 
 modify_stancode_censored <- function(scode_raw, var_xcens, lower_bound, lcl) {
-
   stopifnot("must specify censored predictors using the 'var_xcens' argument." = !is.null(var_xcens))
-
   var_xcens <- make.names(str_remove_all(var_xcens, "[\\._]"))
-
   n_var_xcens <- length(var_xcens)
-
   scode <- scode_raw
 
-  if (length(lower_bound) == 1 && is.numeric(lower_bound)) lower_bound <- rep(lower_bound, n_var_xcens)
+  # Normalize lower_bound: scalar -> replicated list, vector -> list of scalars, list -> as-is
+  if (!is.null(lower_bound)) {
+    if (!is.list(lower_bound)) {
+      if (length(lower_bound) == 1) lower_bound <- rep(lower_bound, n_var_xcens)
+      lower_bound <- as.list(lower_bound)
+    }
+  }
 
   for(i in seq_len(n_var_xcens)) {
-
     # modifications to data block:
     n_cens <- glue("int<lower=0> Ncens_{var_xcens[i]};  // number of left-censored")
     j_cens <- glue("array[Ncens_{var_xcens[i]}] int<lower=1> Jcens_{var_xcens[i]};  // positions of left-censored")
@@ -82,19 +84,51 @@ modify_stancode_censored <- function(scode_raw, var_xcens, lower_bound, lcl) {
     } else {
       glue("real U_{var_xcens[i]};  // left-censoring limit")
     }
+
+    # lower bound data block entry (vector or scalar, mirroring lcl/u logic):
+    lb_i <- if (!is.null(lower_bound)) lower_bound[[i]] else NULL
+    lb_is_vector <- length(lb_i) > 1 && !anyNA(lb_i)
+    l <- if (lb_is_vector) {
+      glue("vector[Ncens_{var_xcens[i]}] L_{var_xcens[i]};  // lower bound")
+    } else {
+      NULL
+    }
+
     # modifications to parameters block:
     y_cens <- glue("vector<upper=U_{var_xcens[i]}>[Ncens_{var_xcens[i]}] Ycens_{var_xcens[i]};  // estimated left-censored")
-    if (!is.null(lower_bound)) {
-      if (!is.na(lower_bound[i])) y_cens <- str_replace(y_cens, "^vector<", glue("vector<lower={lower_bound[i]}, "))
+    if (!is.null(lb_i) && !anyNA(lb_i)) {
+      lower_str <- if (lb_is_vector) {
+        glue("lower=L_{var_xcens[i]}, ")
+      } else {
+        glue("lower={lb_i}, ")
+      }
+      y_cens <- str_replace(y_cens, "^vector<", glue("vector<{lower_str}"))
     }
+
     # modifications to model block:
-    yl <- glue("Yl_{var_xcens[i]}[Jcens_{var_xcens[i]}] = Ycens_{var_xcens[i]}; // add imputed left-censored values")
+    # detect whether the variable appears as "Yl_<var>" (multivariate) or "Yl" (univariate).
+    # in both cases the Yl declaration line is the anchor for inserting the censored imputation.
+    model_block <- str_extract(scode, "model \\{(.|\n)*")
+    is_multivariate <- str_detect(model_block, "Yl_")
+
+    yl_var <- if (is_multivariate) {
+      glue("Yl_{var_xcens[i]}")
+    } else {
+      "Yl"
+    }
+    yl <- glue("{yl_var}[Jcens_{var_xcens[i]}] = Ycens_{var_xcens[i]}; // add imputed left-censored values")
+
+    data_additions <- if (!is.null(l)) {
+      paste(c("\\1", n_cens, j_cens, u, l), collapse = "\n  ")
+    } else {
+      paste(c("\\1", n_cens, j_cens, u), collapse = "\n  ")
+    }
 
     scode <- scode %>%
       # modifications to data block:
       str_replace(
         "(data \\{\n(.|\n)*?)(?=\n\\})",
-        paste(c("\\1", n_cens, j_cens, u), collapse = "\n  ")
+        data_additions
       ) %>%
       # modifications to parameters block:
       str_replace(
@@ -102,15 +136,13 @@ modify_stancode_censored <- function(scode_raw, var_xcens, lower_bound, lcl) {
         paste(c("\\1\n  ", y_cens), collapse = "")
       ) %>%
       # modifications to model block:
+      # insert censored imputation after the Yl declaration line for this variable.
+      # this works for both univariate ("Yl = Y") and multivariate ("Yl_x = Y_x") cases.
       str_replace(
-        "(model \\{\n(.|\n)*?)(?=\n    mu_)",
+        "(model \\{\n(.|\n)*?)(?=\n    mu)",
         paste(c("\\1\n    ", yl), collapse = "")
       )
-
   }
-
   class(scode) <- "brmsmodel"
-
   return(scode)
-
 }

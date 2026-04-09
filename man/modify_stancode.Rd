@@ -10,7 +10,8 @@ modify_stancode(
   var_xcens = NULL,
   var_car1 = NULL,
   lower_bound = NULL,
-  lcl = NULL
+  lcl = NULL,
+  car1 = TRUE
 )
 }
 \arguments{
@@ -23,10 +24,13 @@ which creates the CAR(1) error term.}
 
 \item{var_car1}{For multivariate models, specify which variable to generate CAR(1) errors for.}
 
-\item{lower_bound}{An optional lower bound for left-censored parameters. The default is no lower bound.}
+\item{lower_bound}{A scalar lower bound for left-censored variables. Alternatively, a numeric vector of lower bounds for left-censored variables. Alternatively, a list of numeric vectors with lower bounds for
+each variable and observation; the order should correspond to that of \code{lcl}, \code{var_xcens}, and \code{cens_ind}.}
 
 \item{lcl}{A numeric vector of censoring limits for left-censored variables. Alternatively, a list of numeric vectors with censoring limits for
-each variable and observation; the order should correspond to that of \code{lcl} and \code{cens_ind}.}
+each variable and observation; the order should correspond to that of \code{var_xcens} and \code{cens_ind}.}
+
+\item{car1}{Logical. Fit a CAR(1) error model?}
 }
 \value{
 A Stan program of class \code{brmsmodel}.
