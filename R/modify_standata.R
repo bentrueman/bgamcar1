@@ -24,10 +24,12 @@
 #' str(sdata_modified)
 modify_standata <- function(sdata, data, lcl, lower_bound, var_xcens, cens_ind) {
   lcl <- as.list(lcl)
-  lower_bound  <- as.list(lower_bound)
+  if (!is.null(lower_bound)) {
+    stopifnot("lengths of 'var_xcens' and 'lower_bound' must be equal" = length(lower_bound)  == length(var_xcens))
+    lower_bound  <- as.list(lower_bound)
+  }
   stopifnot(
     "lengths of 'var_xcens' and 'lcl' must be equal" = length(lcl) == length(var_xcens),
-    "lengths of 'var_xcens' and 'lower_bound' must be equal" = length(lower_bound)  == length(var_xcens),
     "lengths of 'var_xcens' and 'cens_var' must be equal" = length(var_xcens) == length(cens_ind)
   )
   varstan <- make.names(str_remove_all(var_xcens, "_"))
@@ -36,7 +38,7 @@ modify_standata <- function(sdata, data, lcl, lower_bound, var_xcens, cens_ind) 
     sdata[[paste0("Ncens_", varstan[i])]] <- sum(cens_logical) # number of left-censored
     sdata[[paste0("Jcens_", varstan[i])]] <- as.array(seq_len(nrow(data))[cens_logical]) # positions of left-censored
     sdata[[paste0("U_", varstan[i])]] <- lcl[[i]] # left-censoring limits
-    sdata[[paste0("L_", varstan[i])]] <- lower_bound[[i]]   # lower bound
+    if (!is.null(lower_bound)) sdata[[paste0("L_", varstan[i])]] <- lower_bound[[i]]   # lower bound
     if (sum(cens_logical) == 0) message(glue("No left-censored {var_xcens} values."))
   }
   sdata
