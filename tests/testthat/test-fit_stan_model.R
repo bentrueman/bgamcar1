@@ -241,6 +241,29 @@ test_that("fit_stan_model() handles vector and scalar upper and lower bounds on 
   expect_true(all(get_draws_summary(fit_multiple_lcl, min) > lb_limits[[1]]))
 })
 
+test_that("fit_stan_model() works with lower_bound = NULL", {
+  univariate_formula <- brms::bf(x | mi() ~ 1)
+  data <- data.frame(x = rnorm(50))
+  data$x_cens <- ifelse(data$x < -1, "left", "none")
+  data$x <- pmax(data$x, -1)
+  N_cens <- sum(data$x_cens == "left")
+  lcl_limits <- list(runif(N_cens, -1.5, -0.5))
+  expect_no_error(fit_stan_model(
+    file = tempfile(),
+    seed = 125,
+    bform = univariate_formula,
+    bdata = data,
+    iter = 1,
+    car1 = FALSE,
+    var_xcens = "x",
+    cens_ind = "x_cens",
+    lcl = lcl_limits,
+    save_warmup = FALSE,
+    lower_bound = NULL,
+    family = "gaussian"
+  ))
+})
+
 test_that("fit_stan_model() handles missings", {
   skip() # currently an empty test
   data <- data.frame(y = c(rnorm(10), NA), time = 1:11, d_x = c(0, rep(1, 10)))
