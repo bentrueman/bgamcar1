@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2022 bgamcar1 authors
+Copyright (c) 2022 Ben Trueman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
